@@ -1,0 +1,444 @@
+/* ===========================
+   SAHA ENTERPRISE BILL PRODUCTS
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    padding-bottom:190px;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    background:#075E54;
+    color:#fff;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    border-bottom-left-radius:20px;
+    border-bottom-right-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+}
+
+.header-content{
+    flex:1;
+}
+
+.header-content h1{
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.header-content p{
+    color:#d9d9d9;
+    font-size:14px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:90%;
+    max-width:900px;
+    margin:25px auto;
+    background:#fff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    padding:14px 18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.search-box i{
+    color:#777;
+    margin-right:10px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    width:100%;
+    font-size:16px;
+}
+
+/* ================= PRODUCT LIST ================= */
+
+#productList{
+    width:90%;
+    max-width:900px;
+    padding-bottom:60px;
+    margin:auto;
+}
+
+/* ================= PRODUCT CARD ================= */
+
+.product-card{
+    background:#fff;
+    border-radius:15px;
+    margin-bottom:18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.18);
+    overflow:hidden;
+    transition:.25s;
+}
+
+.product-card:hover{
+    transform:translateY(-2px);
+}
+
+/* ================= PRODUCT HEADER ================= */
+
+.product-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px;
+}
+
+.product-header h3{
+    color:#222;
+    font-size:22px;
+    margin-bottom:5px;
+}
+
+.product-header p{
+    color:#128C7E;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* ================= FLAVOUR ================= */
+
+.flavour-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 18px;
+    border-top:1px solid #ececec;
+}
+
+.flavour-row span:first-child{
+    font-size:16px;
+    color:#333;
+}
+
+/* ================= QUANTITY ================= */
+
+.qty-box{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.qty-box button{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:50%;
+    color:#fff;
+    font-size:20px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.minus{
+    background:#dc3545;
+}
+
+.minus:hover{
+    background:#b52a37;
+}
+
+.plus{
+    background:#25D366;
+}
+
+.plus:hover{
+    background:#128C7E;
+}
+
+.qty-box span{
+    width:25px;
+    text-align:center;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* ================= BILL SUMMARY ================= */
+
+.bill-summary{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#fff;
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+    padding:20px;
+    box-shadow:0 -5px 15px rgba(0,0,0,.25);
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.button-group{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.button-group button{
+    flex:1;
+    border:none;
+    border-radius:10px;
+    padding:13px;
+    color:#fff;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    transition:.25s;
+}
+
+.clear-btn{
+    background:#dc3545;
+}
+
+.clear-btn:hover{
+    background:#b52a37;
+}
+
+.save-btn{
+    background:#25D366;
+}
+
+.save-btn:hover{
+    background:#128C7E;
+}
+
+.print-btn{
+    background:#075E54;
+}
+
+.print-btn:hover{
+    background:#0b7c6f;
+}
+
+/* ================= EMPTY MESSAGE ================= */
+
+.empty-message{
+    background:#fff;
+    border-radius:15px;
+    padding:30px;
+    text-align:center;
+    color:#666;
+    font-size:18px;
+    box-shadow:0 5px 12px rgba(0,0,0,.15);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:700px){
+
+    header{
+        padding:18px;
+    }
+
+    .header-content h1{
+        font-size:22px;
+    }
+
+    .header-content p{
+        font-size:13px;
+    }
+
+    .product-header{
+        padding:15px;
+    }
+
+    .product-header h3{
+        font-size:19px;
+    }
+
+    .product-header p{
+        font-size:16px;
+    }
+
+    .flavour-row{
+        padding:12px 15px;
+    }
+
+    .qty-box{
+        gap:8px;
+    }
+
+    .qty-box button{
+        width:30px;
+        height:30px;
+        font-size:18px;
+    }
+
+    .button-group{
+        flex-direction:column;
+    }
+
+}
+
+.save-btn:disabled{
+    background:#999;
+    cursor:not-allowed;
+    opacity:.7;
+}
+
+.save-btn:disabled:hover{
+    background:#999;
+}
+
+.print-btn:disabled{
+    background:#999;
+    cursor:not-allowed;
+    opacity:.7;
+}
+
+.print-btn:disabled:hover{
+    background:#999;
+}
+
+/* ================= PAYMENT POPUP ================= */
+
+.payment-options{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    margin-top:15px;
+
+}
+
+.payment-options label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+#paidAmountBox input{
+
+    width:100%;
+
+    padding:10px;
+
+    margin-top:8px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+}
+
+/* ================= PAYMENT BOX ================= */
+
+.payment-box{
+    background:#f4f7f6;
+    border-radius:12px;
+    padding:18px;
+    margin:15px 0;
+    border:1px solid #ddd;
+    padding-bottom: 50px;
+}
+
+.payment-box h3{
+    color:#075E54;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+.payment-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+    font-size:16px;
+}
+
+.payment-row:last-child{
+    border-bottom:none;
+    margin-top:10px;
+}
+
+.payment-options{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin:18px 0;
+}
+
+.payment-options label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.payment-options input[type="radio"]{
+    accent-color:#25D366;
+    transform:scale(1.1);
+}
+
+#paidAmountBox{
+    margin:15px 0;
+}
+
+#paidAmountBox label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#075E54;
+}
+
+#paidAmount{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+    outline:none;
+}
+
+#paidAmount:focus{
+    border-color:#25D366;
+    box-shadow:0 0 6px rgba(37,211,102,.3);
+    
+}
+

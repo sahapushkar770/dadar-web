@@ -1,0 +1,344 @@
+/* ===========================
+   SAHA ENTERPRISE PARTY DATA
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    background:#075E54;
+    color:#fff;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    border-bottom-left-radius:20px;
+    border-bottom-right-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
+
+header h1{
+    flex:1;
+    text-align:center;
+    margin-right:40px;
+    font-size:30px;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:90%;
+    max-width:700px;
+    margin:25px auto;
+    background:#fff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    padding:14px 18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.search-box i{
+    color:#777;
+    margin-right:10px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    width:100%;
+    font-size:16px;
+}
+
+/* ================= PARTY LIST ================= */
+
+#partyList{
+    width:90%;
+    max-width:900px;
+    margin:auto;
+    padding-bottom:100px;
+}
+
+/* ================= PARTY CARD ================= */
+
+.party-card{
+    background:#fff;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 5px 12px rgba(0,0,0,.15);
+    transition:.25s;
+}
+
+.party-card:hover{
+    transform:translateY(-2px);
+}
+
+/* Avatar */
+
+.avatar{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#128C7E;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:22px;
+    font-weight:bold;
+    margin-right:15px;
+}
+
+/* Party Info */
+
+.party-info{
+    flex:1;
+}
+
+.party-info h3{
+    color:#222;
+    margin-bottom:5px;
+}
+
+.party-info p{
+    color:#666;
+    font-size:15px;
+}
+
+/* ================= MENU ================= */
+
+.menu{
+    position:relative;
+}
+
+.menu-btn{
+    border:none;
+    background:none;
+    font-size:20px;
+    cursor:pointer;
+    padding:8px;
+    border-radius:50%;
+}
+
+.menu-btn:hover{
+    background:#eee;
+}
+
+.dropdown{
+    display:none;
+    position:absolute;
+    right:0;
+    top:40px;
+    background:#fff;
+    width:150px;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+    z-index:10;
+}
+
+.dropdown button{
+    width:100%;
+    padding:12px;
+    border:none;
+    background:#fff;
+    text-align:left;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.dropdown button:hover{
+    background:#f2f2f2;
+}
+
+.delete{
+    color:#d32f2f;
+}
+
+/* ================= FLOATING BUTTON ================= */
+
+.fab{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    width:65px;
+    height:65px;
+    border:none;
+    border-radius:50%;
+    background:#25D366;
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+    box-shadow:0 6px 15px rgba(0,0,0,.3);
+    transition:.25s;
+}
+
+.fab:hover{
+    transform:scale(1.08);
+    background:#128C7E;
+}
+
+/* ================= POPUP ================= */
+
+.popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+
+/* Popup Box */
+
+.popup-box{
+    background:#fff;
+    width:380px;
+    max-width:92%;
+    border-radius:15px;
+    padding:25px;
+    animation:popup .2s ease;
+}
+
+@keyframes popup{
+
+    from{
+        transform:scale(.8);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+.popup-box h2{
+    text-align:center;
+    color:#075E54;
+    margin-bottom:20px;
+}
+
+.popup-box p{
+    text-align:center;
+    margin:20px 0;
+    color:#444;
+}
+
+/* ================= INPUT ================= */
+
+.popup-box input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    outline:none;
+    margin-bottom:15px;
+    font-size:15px;
+}
+
+.popup-box input:focus{
+    border-color:#128C7E;
+}
+
+/* ================= BUTTONS ================= */
+
+.popup-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.popup-buttons button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+}
+
+/* Save */
+
+.save{
+    background:#25D366;
+    color:#fff;
+}
+
+.save:hover{
+    background:#128C7E;
+}
+
+/* Cancel */
+
+.cancel{
+    background:#777;
+    color:#fff;
+}
+
+.cancel:hover{
+    background:#555;
+}
+
+/* Delete */
+
+.delete-btn{
+    background:#dc3545;
+    color:#fff;
+}
+
+.delete-btn:hover{
+    background:#b52a37;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:24px;
+        margin-right:20px;
+    }
+
+    .avatar{
+        width:55px;
+        height:55px;
+        font-size:20px;
+    }
+
+    .party-info h3{
+        font-size:17px;
+    }
+
+    .party-info p{
+        font-size:14px;
+    }
+
+    .fab{
+        width:60px;
+        height:60px;
+    }
+
+}

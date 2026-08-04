@@ -1,0 +1,179 @@
+/* ===========================
+   SAHA ENTERPRISE MAKING BILL
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    background:#075E54;
+    color:#fff;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    border-bottom-left-radius:20px;
+    border-bottom-right-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
+
+header h1{
+    flex:1;
+    text-align:center;
+    margin-right:40px;
+    font-size:30px;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:90%;
+    max-width:700px;
+    margin:25px auto;
+    background:#fff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    padding:14px 18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.search-box i{
+    color:#777;
+    margin-right:10px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    width:100%;
+    font-size:16px;
+}
+
+/* ================= PARTY LIST ================= */
+
+#partyList{
+    width:90%;
+    max-width:900px;
+    margin:auto;
+    padding-bottom:30px;
+}
+
+/* ================= PARTY CARD ================= */
+
+.party-card{
+    background:#fff;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 5px 12px rgba(0,0,0,.15);
+    transition:.25s;
+    cursor:pointer;
+}
+
+.party-card:hover{
+    transform:translateY(-2px);
+    background:#f7f7f7;
+}
+
+/* ================= AVATAR ================= */
+
+.avatar{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#128C7E;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:22px;
+    font-weight:bold;
+    margin-right:15px;
+}
+
+/* ================= PARTY INFO ================= */
+
+.party-info{
+    flex:1;
+}
+
+.party-info h3{
+    color:#222;
+    font-size:20px;
+}
+
+/* ================= ARROW ================= */
+
+.party-arrow{
+    color:#888;
+    font-size:18px;
+}
+
+.party-card:hover .party-arrow{
+    color:#075E54;
+}
+
+/* ================= EMPTY MESSAGE ================= */
+
+.empty-message{
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    color:#666;
+    font-size:18px;
+    box-shadow:0 5px 12px rgba(0,0,0,.15);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:24px;
+        margin-right:20px;
+    }
+
+    .avatar{
+        width:55px;
+        height:55px;
+        font-size:20px;
+    }
+
+    .party-info h3{
+        font-size:18px;
+    }
+
+    .party-arrow{
+        font-size:16px;
+    }
+
+    .search-box{
+        width:92%;
+    }
+
+    #partyList{
+        width:92%;
+    }
+
+}

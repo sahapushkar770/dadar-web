@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Bill | Saha Enterprise</title>
+    <link rel="stylesheet" href="show-bill.css">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <!-- ================= HEADER ================= -->
+   <header>
+
+    <a href="home.html" class="home-btn">
+       <i class="fa-solid fa-arrow-left"></i>
+    </a>
+
+    <h1>Show Bill</h1>
+
+
+</header>
+
+    <!-- ================= SEARCH ================= -->
+    <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search" placeholder="Search Bill...">
+    </div>
+
+    <!-- ================= BILL LOG LIST ================= -->
+    <div id="billList">
+        <!-- Invoices inject here via JavaScript -->
+    </div>
+
+    <!-- ================= FLOATING ACTION BUTTON ================= -->
+    <button class="fab" onclick="window.location.href='making-bill.html'">
+        +
+    </button>
+
+    <!-- ================= INVOICE DETAILS & EDIT POPUP ================= -->
+    <div class="popup" id="detailsPopup">
+        <div class="popup-box">
+            <h2 id="modalBillId">Bill ID</h2>
+            
+            <div class="bill-meta">
+                <p><strong>Date:</strong> <span id="modalDate">--/--/----</span></p>
+                <p><strong>Party:</strong> <span id="modalPartyName">Party Name</span></p>
+            </div>
+            
+            <h3>Items Workbook</h3>
+            <div id="modalItemsList">
+                <!-- Rows load here dynamically with plus/minus counters -->
+            </div>
+            
+            <button class="add-item-btn" onclick="openAddItemPopup()">
+            <i class="fa-solid fa-plus"></i>
+              Add Item
+            </button>
+
+            <div class="modal-summary">
+                <div class="summary-row">
+                    <span>Total Items:</span>
+                    <span id="modalTotalItems">0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Grand Total:</span>
+                    <span id="modalGrandTotal">₹0</span>
+                </div>
+            </div>
+
+            <h3>Payment</h3>
+
+<div class="payment-box">
+
+    <label>
+        <input type="radio"
+               name="editPayment"
+               value="paid"
+               onchange="editPaymentChanged()">
+        Paid
+    </label>
+
+    <label>
+        <input type="radio"
+               name="editPayment"
+               value="partial"
+               onchange="editPaymentChanged()">
+        Partial
+    </label>
+
+    <label>
+        <input type="radio"
+               name="editPayment"
+               value="unpaid"
+               onchange="editPaymentChanged()">
+        Unpaid
+    </label>
+
+   <div id="editPaidBox" style="display:none">
+
+    <input
+        type="number"
+        id="editPaidAmount"
+        placeholder="Amount Paid"
+        min="0"
+        oninput="editCalculateRemaining()">
+
+    </div>
+
+    <div class="payment-row">
+
+        Remaining :
+        <span id="editRemaining">0</span>
+
+    </div>
+
+</div>
+
+            <div class="popup-buttons">
+                <button class="save" onclick="saveEditedBill()">
+                    <i class="fa-solid fa-floppy-disk"></i> Save
+                </button>
+                <button class="print-btn" onclick="printBill()">
+                    <i class="fa-solid fa-print"></i> Print
+                </button>
+                <button class="cancel" onclick="closeDetailsPopup()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DELETE CONFIRMATION POPUP ================= -->
+    <div class="popup" id="deletePopup">
+        <div class="popup-box">
+            <h2>Delete Bill</h2>
+            <p>Are you sure you want to permanently delete this bill record from your history?</p>
+            <div class="popup-buttons">
+                <button class="delete-btn" onclick="confirmDelete()">Delete</button>
+                <button class="cancel" onclick="closeDeletePopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+     window.billMode = "all";
+    </script>
+
+
+    <script src="show-bills.js"></script>
+    <!-- <script src="bill-manager.js"></script> -->
+    <!-- ================= ADD ITEM POPUP ================= -->
+
+<div class="popup" id="addItemPopup">
+
+    <div class="popup-box">
+
+        <h2>Add Item</h2>
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="productSearch"
+                placeholder="Search Product..."
+                onkeyup="searchAddProduct()">
+
+        </div>
+
+        <div id="addProductList" class="add-product-list">
+
+        </div>
+
+        <div class="popup-buttons">
+
+            <button class="cancel" onclick="closeAddItemPopup()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="popup" id="flavourPopup">
+    <div class="popup-box">
+        <h2>Select Flavour</h2>
+
+        <div id="flavourList"></div>
+
+        <div class="popup-buttons">
+            <button class="cancel" onclick="closeFlavourPopup()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="partialPaymentPopup">
+
+    <div class="popup-box" style="max-width:350px;">
+
+        <h2>Partial Payment</h2>
+
+        <div class="payment-popup">
+
+            <p>
+                <strong>Total :</strong>
+                ₹<span id="partialTotal">0</span>
+            </p>
+
+            <input
+                type="number"
+                id="partialPaidAmount"
+                placeholder="Enter Paid Amount"
+                oninput="updatePartialRemaining()">
+
+            <p>
+                <strong>Remaining :</strong>
+                ₹<span id="partialRemaining">0</span>
+            </p>
+
+        </div>
+
+        <div class="popup-buttons">
+
+            <button class="save" onclick="savePartialPayment()">
+                Save
+            </button>
+
+            <button class="cancel" onclick="closePartialPopup()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

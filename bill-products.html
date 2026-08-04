@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bill Products | Saha Enterprise</title>
+
+    <link rel="stylesheet" href="C:\Users\hp\OneDrive\Desktop\dadar website\bill-products.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <a href="making-bill.html" class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+        </a>
+
+        <div class="header-content">
+
+            <h1 id="partyName">
+
+                Party Name
+
+            </h1>
+
+            <p id="billId">
+
+                Bill ID : Loading...
+
+            </p>
+
+        </div>
+
+    </header>
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Search Product...">
+
+    </div>
+
+    <!-- ================= PRODUCT LIST ================= -->
+
+    <div id="productList">
+
+        <!--
+
+        ===============================
+        PRODUCT WITHOUT FLAVOURS
+        ===============================
+
+        <div class="product-card">
+
+            <div class="product-header">
+
+                <div>
+
+                    <h3>Coca Cola</h3>
+
+                    <p>₹40</p>
+
+                </div>
+
+                <div class="qty-box">
+
+                    <button class="minus">-</button>
+
+                    <span>0</span>
+
+                    <button class="plus">+</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+        ===============================
+        PRODUCT WITH MULTIPLE FLAVOURS
+        ===============================
+
+        <div class="product-card">
+
+            <div class="product-header">
+
+                <div>
+
+                    <h3>Pepsi</h3>
+
+                    <p>₹50</p>
+
+                </div>
+
+            </div>
+
+            <div class="flavour-row">
+
+                <span>Mint</span>
+
+                <div class="qty-box">
+
+                    <button class="minus">-</button>
+
+                    <span>0</span>
+
+                    <button class="plus">+</button>
+
+                </div>
+
+            </div>
+
+            <div class="flavour-row">
+
+                <span>Regular</span>
+
+                <div class="qty-box">
+
+                    <button class="minus">-</button>
+
+                    <span>0</span>
+
+                    <button class="plus">+</button>
+
+                </div>
+
+            </div>
+
+            <div class="flavour-row">
+
+                <span>Diet</span>
+
+                <div class="qty-box">
+
+                    <button class="minus">-</button>
+
+                    <span>0</span>
+
+                    <button class="plus">+</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        -->
+
+    </div>
+
+    <!-- ================= BILL SUMMARY ================= -->
+     <div class="payment-box">
+
+    <h3>Payment Details</h3>
+
+    
+
+    <div class="payment-options">
+
+        <label>
+            <input type="radio" name="paymentType" value="paid" onchange="paymentTypeChanged()">
+         Full Payment
+        </label>
+
+        <label>
+            <input type="radio" name="paymentType" value="partial" onchange="paymentTypeChanged()">
+            Partial Payment
+        </label>
+
+        <label>
+            <input type="radio" name="paymentType" value="unpaid" checked onchange="paymentTypeChanged()">
+            Unpaid
+        </label>
+
+    </div>
+
+    <div id="paidAmountBox" style="display:none;">
+
+        <label>Amount Paid</label>
+
+        <input
+            type="number"
+            id="paidAmount"
+            min="0"
+            value="0"
+            oninput="calculateRemaining()">
+
+    </div>
+
+    <div class="bill-summary">
+
+        <div class="summary-row">
+
+            <span>Total Items</span>
+
+            <span id="totalItems">
+
+                0
+
+            </span>
+
+        </div>
+
+        <div class="summary-row">
+
+            <span>Grand Total</span>
+
+            <span id="grandTotal">
+
+                ₹0
+
+            </span>
+
+        </div>
+
+        <div class="button-group">
+
+            <button
+                class="clear-btn"
+                onclick="clearBill()">
+
+                <i class="fa-solid fa-trash"></i>
+
+                Clear
+
+            </button>
+
+           <button id="saveBtn" class="save-btn" onclick="saveBill()" disabled>
+             <i class="fa-solid fa-floppy-disk"></i>
+             Save Bill
+            </button>
+
+           <button id="printBtn" class="print-btn" onclick="printBill()" disabled>
+
+                <i class="fa-solid fa-print"></i>
+
+                Print
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ================= PAYMENT POPUP ================= -->
+
+
+
+    <div class="payment-row">
+        <span>Remaining Amount</span>
+        <strong style="color:#dc3545;">
+            ₹<span id="remainingAmount">0</span>
+        </strong>
+    </div>
+
+</div>
+
+    <script src="bill-products.js"></script>
+
+</body>
+
+</html>
