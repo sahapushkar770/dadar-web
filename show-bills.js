@@ -15,6 +15,19 @@ let editPaidAmount = 0;
 let editRemainingAmount = 0;
 
 // ==========================================
+// TRASH (RECENTLY DELETED BILLS)
+// Deleted bills go here instead of being erased immediately, tagged with
+// when they were deleted. Anything older than TRASH_RETENTION_MS gets
+// permanently purged automatically.
+// ==========================================
+
+let deletedBills = JSON.parse(localStorage.getItem("deletedBills")) || [];
+let selectedTrashIndex = -1;
+
+const TRASH_RETENTION_DAYS = 7;
+const TRASH_RETENTION_MS = TRASH_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+
+// ==========================================
 // MONEY HELPERS
 // Rounds to the nearest cent (avoids floating-point artifacts like
 // 99.90000000000001) and formats for display with exactly 2 decimals.
@@ -33,6 +46,8 @@ window.onload = function () {
 
    selectedParty =
     JSON.parse(localStorage.getItem("selectedParty")) || null;
+
+    purgeExpiredDeletedBills();
 
     if(window.billMode === "party"){
 
@@ -56,6 +71,8 @@ window.onload = function () {
     }
 
     displayBills();
+
+    updateTrashBadge();
 
     let search = document.getElementById("search");
 
@@ -535,6 +552,13 @@ function confirmDelete() {
 
         localStorage.setItem("bills", JSON.stringify(allBills));
 
+        // Move into trash instead of erasing — restorable for TRASH_RETENTION_DAYS
+        deletedBills.push({
+            bill: billToDelete,
+            deletedAt: Date.now()
+        });
+        localStorage.setItem("deletedBills", JSON.stringify(deletedBills));
+
         // Keep the local view array in sync
         bills.splice(selectedIndex, 1);
 
@@ -546,8 +570,184 @@ function confirmDelete() {
             loadPartySummary();
         }
 
+        updateTrashBadge();
+
         closeDeletePopup();
     }
+}
+
+// ==========================================
+// TRASH / RESTORE
+// ==========================================
+
+// Removes anything that has sat in trash longer than the retention window
+function purgeExpiredDeletedBills() {
+
+    const now = Date.now();
+    const before = deletedBills.length;
+
+    deletedBills = deletedBills.filter(entry =>
+        (now - entry.deletedAt) < TRASH_RETENTION_MS
+    );
+
+    if (deletedBills.length !== before) {
+        localStorage.setItem("deletedBills", JSON.stringify(deletedBills));
+    }
+
+}
+
+// Shows/hides the little count badge on the trash button
+function updateTrashBadge() {
+
+    const badge = document.getElementById("trashCount");
+
+    if (!badge) return;
+
+    if (deletedBills.length > 0) {
+        badge.style.display = "inline-flex";
+        badge.innerText = deletedBills.length;
+    } else {
+        badge.style.display = "none";
+    }
+
+}
+
+function openTrashPopup() {
+
+    const popup = document.getElementById("trashPopup");
+
+    if (!popup) return;
+
+    purgeExpiredDeletedBills();
+    renderTrashList();
+    updateTrashBadge();
+
+    popup.style.display = "flex";
+
+}
+
+function closeTrashPopup() {
+
+    const popup = document.getElementById("trashPopup");
+
+    if (popup) popup.style.display = "none";
+
+}
+
+function renderTrashList() {
+
+    const list = document.getElementById("trashList");
+
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    if (deletedBills.length === 0) {
+
+        list.innerHTML = `<div class="empty-message">Trash is empty</div>`;
+
+        return;
+
+    }
+
+    const dayMs = 24 * 60 * 60 * 1000;
+
+    // Show most recently deleted first
+    for (let i = deletedBills.length - 1; i >= 0; i--) {
+
+        const entry = deletedBills[i];
+        const bill = entry.bill;
+
+        const displayPartyName =
+            (bill.party && bill.party.name) ? bill.party.name : "Unknown Party";
+
+        const displayBillId = bill.billId || "No ID";
+        const displayDate = bill.date || "--/--/----";
+
+        const displayAmount =
+            bill.grandTotal !== undefined ? bill.grandTotal : (bill.total || 0);
+
+        const msLeft = TRASH_RETENTION_MS - (Date.now() - entry.deletedAt);
+        const daysLeft = Math.max(0, Math.ceil(msLeft / dayMs));
+
+        const urgencyColor = daysLeft <= 1 ? "#dc3545" : "#ff9800";
+
+        list.innerHTML += `
+
+        <div class="trash-card">
+
+            <div class="trash-info">
+
+                <h3>${displayPartyName}</h3>
+
+                <p>Bill ID : ${displayBillId}</p>
+
+                <span>Date : ${displayDate}</span>
+
+                <p style="color:${urgencyColor}; font-weight:bold; margin-top:5px;">
+                    ${daysLeft > 0
+                        ? `Auto-deletes in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`
+                        : `Auto-deletes very soon`}
+                </p>
+
+            </div>
+
+            <div class="trash-right">
+
+                <div class="bill-amount">
+                    ₹${fmtMoney(displayAmount)}
+                </div>
+
+                <button class="restore-btn" onclick="restoreBill(${i})">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Restore
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+function restoreBill(trashIndex) {
+
+    const entry = deletedBills[trashIndex];
+
+    if (!entry) return;
+
+    // Put it back into the full dataset
+    allBills.push(entry.bill);
+    localStorage.setItem("bills", JSON.stringify(allBills));
+
+    // Remove from trash
+    deletedBills.splice(trashIndex, 1);
+    localStorage.setItem("deletedBills", JSON.stringify(deletedBills));
+
+    // Refresh whichever view is currently active
+    if (window.billMode === "party") {
+
+        bills = allBills.filter(bill =>
+            bill.party &&
+            bill.party.name === selectedParty.name &&
+            bill.party.phone === selectedParty.phone
+        );
+
+        loadPartySummary();
+
+    } else {
+
+        bills = allBills;
+
+    }
+
+    displayBills();
+    renderTrashList();
+    updateTrashBadge();
+
 }
 
 // ==========================================

@@ -20,6 +20,10 @@
 
     <h1>Show Bill</h1>
 
+    <button class="trash-btn" onclick="openTrashPopup()" title="Recently Deleted">
+       <i class="fa-solid fa-trash-can-arrow-up"></i>
+       <span id="trashCount" class="trash-badge" style="display:none;">0</span>
+    </button>
 
 </header>
 
@@ -236,6 +240,33 @@
 
             <button class="cancel" onclick="closePartialPopup()">
                 Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= TRASH / RECENTLY DELETED POPUP ================= -->
+
+<div class="popup" id="trashPopup">
+
+    <div class="popup-box" style="width:550px;">
+
+        <h2>Recently Deleted</h2>
+
+        <p style="text-align:center; color:#666; font-size:13px; margin-bottom:15px;">
+            Deleted bills are kept for 7 days before being permanently removed.
+        </p>
+
+        <div id="trashList" class="add-product-list" style="max-height:400px;">
+        </div>
+
+        <div class="popup-buttons">
+
+            <button class="cancel" onclick="closeTrashPopup()">
+                Close
             </button>
 
         </div>

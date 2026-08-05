@@ -443,3 +443,100 @@ header h1{
     border:1px solid #ccc;
     border-radius:8px;
 }
+
+/* ================= TRASH / RECENTLY DELETED ================= */
+
+.trash-btn{
+    position:relative;
+    color:#fff;
+    background:none;
+    border:none;
+    font-size:20px;
+    cursor:pointer;
+    width:40px;
+    height:40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-shrink:0;
+    transition:opacity 0.2s, transform 0.1s;
+}
+
+.trash-btn:hover{
+    opacity:0.85;
+}
+
+.trash-btn:active{
+    transform:scale(0.95);
+}
+
+.trash-badge{
+    position:absolute;
+    top:0;
+    right:0;
+    background:#dc3545;
+    color:#fff;
+    font-size:11px;
+    font-weight:bold;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    border-radius:9px;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    line-height:1;
+}
+
+.trash-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:14px 12px;
+    border-bottom:1px solid #eee;
+}
+
+.trash-card:last-child{
+    border-bottom:none;
+}
+
+.trash-info h3{
+    color:#222;
+    margin-bottom:4px;
+    font-size:16px;
+}
+
+.trash-info p{
+    color:#666;
+    font-size:14px;
+}
+
+.trash-info span{
+    color:#666;
+    font-size:14px;
+}
+
+.trash-right{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+    flex-shrink:0;
+}
+
+.restore-btn{
+    background:#075E54;
+    color:#fff;
+    border:none;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.restore-btn:hover{
+    background:#0b7c6f;
+}
