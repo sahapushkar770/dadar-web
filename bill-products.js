@@ -17,6 +17,20 @@ let paidAmount = 0;
 let remainingAmount = 0;
 
 // ===========================
+// MONEY HELPERS
+// Rounds to the nearest cent (avoids floating-point artifacts like
+// 99.90000000000001) and formats for display with exactly 2 decimals.
+// ===========================
+
+function roundMoney(n) {
+    return Math.round((Number(n) || 0) * 100) / 100;
+}
+
+function fmtMoney(n) {
+    return roundMoney(n).toFixed(2);
+}
+
+// ===========================
 // PAGE LOAD
 // ===========================
 
@@ -110,7 +124,7 @@ function displayProducts() {
 
                         <h3>${product.name}</h3>
 
-                        <p>₹${product.price}</p>
+                        <p>₹${fmtMoney(product.price)}</p>
 
                     </div>
 
@@ -161,7 +175,7 @@ function displayProducts() {
 
                         <h3>${product.name}</h3>
 
-                        <p>₹${product.price}</p>
+                        <p>₹${fmtMoney(product.price)}</p>
 
                     </div>
 
@@ -325,10 +339,10 @@ function updateBill() {
 
             if (qty > 0) {
 
-                let total = qty * product.price;
+                let total = roundMoney(qty * product.price);
 
                 totalItems += qty;
-                grandTotal += total;
+                grandTotal = roundMoney(grandTotal + total);
 
                 billItems.push({
 
@@ -357,10 +371,10 @@ function updateBill() {
 
                 if (qty > 0) {
 
-                    let total = qty * product.price;
+                    let total = roundMoney(qty * product.price);
 
                     totalItems += qty;
-                    grandTotal += total;
+                    grandTotal = roundMoney(grandTotal + total);
 
                     billItems.push({
 
@@ -382,7 +396,7 @@ function updateBill() {
 
     // Update Summary
 document.getElementById("totalItems").textContent = totalItems;
-document.getElementById("grandTotal").textContent = "₹" + grandTotal;
+document.getElementById("grandTotal").textContent = "₹" + fmtMoney(grandTotal);
 
 // Save Button
 const saveBtn = document.getElementById("saveBtn");
@@ -436,13 +450,13 @@ function saveBill() {
         paymentStatusLabel = "Paid";
     }
     else if (paymentType === "partial") {
-        paid = Number(document.getElementById("paidAmount").value) || 0;
+        paid = roundMoney(Number(document.getElementById("paidAmount").value) || 0);
 
         if (paid > grandTotal) {
             paid = grandTotal;
         }
 
-        remaining = grandTotal - paid;
+        remaining = roundMoney(grandTotal - paid);
 
         // If the partial amount happens to cover the full total, treat it as Paid
         paymentStatusLabel = remaining === 0 ? "Paid" : "Partial";
@@ -564,7 +578,7 @@ function printBill() {
 // ===========================
 
 remainingAmount = 0;
-document.getElementById("remainingAmount").innerText = "0";
+document.getElementById("remainingAmount").innerText = fmtMoney(0);
 
 function closePaymentPopup(){
 
@@ -598,7 +612,7 @@ function paymentTypeChanged() {
 
         paidAmount = Number(document.getElementById("paidAmount").value) || 0;
 
-        remainingAmount = grandTotal - paidAmount;
+        remainingAmount = roundMoney(grandTotal - paidAmount);
 
         if (remainingAmount < 0)
             remainingAmount = 0;
@@ -620,7 +634,7 @@ function paymentTypeChanged() {
     }
 
     document.getElementById("remainingAmount").innerText =
-        remainingAmount;
+        fmtMoney(remainingAmount);
 
 }
 
@@ -638,12 +652,12 @@ function calculateRemaining() {
 
     }
 
-    remainingAmount = grandTotal - paidAmount;
+    remainingAmount = roundMoney(grandTotal - paidAmount);
 
     if (remainingAmount < 0)
         remainingAmount = 0;
 
     document.getElementById("remainingAmount").innerText =
-        remainingAmount;
+        fmtMoney(remainingAmount);
 
 }
