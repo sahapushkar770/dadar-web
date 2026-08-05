@@ -14,6 +14,20 @@ let editPaymentStatus = "Unpaid";
 let editPaidAmount = 0;
 let editRemainingAmount = 0;
 
+// ==========================================
+// MONEY HELPERS
+// Rounds to the nearest cent (avoids floating-point artifacts like
+// 99.90000000000001) and formats for display with exactly 2 decimals.
+// ==========================================
+
+function roundMoney(n) {
+    return Math.round((Number(n) || 0) * 100) / 100;
+}
+
+function fmtMoney(n) {
+    return roundMoney(n).toFixed(2);
+}
+
 window.onload = function () {
 
 
@@ -104,8 +118,10 @@ function loadPartySummary(){
 
     });
 
+    remaining = roundMoney(remaining);
+
     document.getElementById("remainingAmount").innerText =
-        "₹" + remaining;
+        "₹" + fmtMoney(remaining);
 
 }
 
@@ -192,14 +208,14 @@ function displayBills() {
                 font-weight:bold;
                 margin-top:5px;
             ">
-                Paid : ₹${payment.paidAmount}
+                Paid : ₹${fmtMoney(payment.paidAmount)}
             </p>
 
             <p style="
                 color:#dc3545;
                 font-weight:bold;
             ">
-                Remaining : ₹${payment.remainingAmount}
+                Remaining : ₹${fmtMoney(payment.remainingAmount)}
             </p>
         `;
 
@@ -214,7 +230,7 @@ function displayBills() {
                     font-weight:bold;
                     margin-top:5px;
                 ">
-                    Remaining : ₹${payment.remainingAmount}
+                    Remaining : ₹${fmtMoney(payment.remainingAmount)}
                 </p>
             `;
 
@@ -245,7 +261,7 @@ function displayBills() {
             <div class="bill-right" onclick="event.stopPropagation()">
 
                 <div class="bill-amount">
-                    ₹${displayAmount}
+                    ₹${fmtMoney(displayAmount)}
                 </div>
 
                 <div class="menu">
@@ -340,10 +356,10 @@ else{
 }
 
 document.getElementById("editPaidAmount").value =
-payment.paidAmount;
+roundMoney(payment.paidAmount);
 
 document.getElementById("editRemaining").innerText =
-payment.remainingAmount;
+fmtMoney(payment.remainingAmount);
 
 editPaymentChanged();
 }
@@ -360,34 +376,34 @@ function renderModalItems() {
         // Fallback calculations for individual items
         let itemQty = item.qty !== undefined ? item.qty : 0;
         let itemPrice = item.price !== undefined ? item.price : 0;
-        let itemTotal = item.total !== undefined ? item.total : (itemQty * itemPrice);
+        let itemTotal = roundMoney(item.total !== undefined ? item.total : (itemQty * itemPrice));
 
         totalItems += itemQty;
-        grandTotal += itemTotal;
+        grandTotal = roundMoney(grandTotal + itemTotal);
         let flavorLabel = item.flavour ? ` (${item.flavour})` : "";
 
         container.innerHTML += `
         <div class="modal-item-row">
             <div>
                 <strong>${item.product}</strong>${flavorLabel}<br>
-                <span style="color:#666; font-size:12px;">₹${itemPrice} each</span>
+                <span style="color:#666; font-size:12px;">₹${fmtMoney(itemPrice)} each</span>
             </div>
             <div class="modal-qty-box">
                 <button class="m-minus" onclick="changeModalQty(${idx}, -1)">-</button>
                 <span>${itemQty}</span>
                 <button class="m-plus" onclick="changeModalQty(${idx}, 1)">+</button>
             </div>
-            <div style="font-weight:bold; width: 80px; text-align: right;">₹${itemTotal}</div>
+            <div style="font-weight:bold; width: 80px; text-align: right;">₹${fmtMoney(itemTotal)}</div>
         </div>`;
     });
 
     // Fallback support for displaying summary calculations inside the modal
     let bill = bills[selectedIndex];
     let displayTotalItems = totalItems || bill.totalItems || 0;
-    let displayGrandTotal = grandTotal || bill.grandTotal || bill.total || 0;
+    let displayGrandTotal = roundMoney(grandTotal || bill.grandTotal || bill.total || 0);
 
     document.getElementById("modalTotalItems").innerText = displayTotalItems;
-    document.getElementById("modalGrandTotal").innerText = "₹" + displayGrandTotal;
+    document.getElementById("modalGrandTotal").innerText = "₹" + fmtMoney(displayGrandTotal);
     
 }
 
@@ -399,7 +415,7 @@ function changeModalQty(index, change) {
     if (item.qty <= 0) {
         localModalItems.splice(index, 1);
     } else {
-        item.total = item.qty * item.price;
+        item.total = roundMoney(item.qty * item.price);
     }
     renderModalItems();
 }
@@ -418,7 +434,7 @@ function saveEditedBill() {
     localModalItems.forEach(item => {
 
         calculatedItemsCount += item.qty;
-        calculatedGrandTotal += item.total;
+        calculatedGrandTotal = roundMoney(calculatedGrandTotal + item.total);
 
     });
 
@@ -450,15 +466,15 @@ function saveEditedBill() {
 
     else if (type === "partial") {
 
-        paid = Number(
+        paid = roundMoney(Number(
             document.getElementById("editPaidAmount").value
-        ) || 0;
+        ) || 0);
 
         if (paid > calculatedGrandTotal) {
             paid = calculatedGrandTotal;
         }
 
-        remaining = calculatedGrandTotal - paid;
+        remaining = roundMoney(calculatedGrandTotal - paid);
 
         status = remaining === 0
             ? "Paid"
@@ -607,7 +623,7 @@ function displayAddProducts() {
 
                 <strong>${product.name}</strong><br>
 
-                ₹${product.price}
+                ₹${fmtMoney(product.price)}
 
             </div>
 
@@ -730,7 +746,7 @@ function addProductWithFlavour(product, flavour){
     if(existing){
 
         existing.qty++;
-        existing.total = existing.qty * existing.price;
+        existing.total = roundMoney(existing.qty * existing.price);
 
     }else{
 
@@ -740,7 +756,7 @@ function addProductWithFlavour(product, flavour){
             flavour: flavour,
             qty: 1,
             price: product.price,
-            total: product.price
+            total: roundMoney(product.price)
 
         });
 
@@ -770,9 +786,9 @@ function editCalculateRemaining(){
 
     }
 
-    let remaining = total - paid;
+    let remaining = roundMoney(total - paid);
 
-    document.getElementById("editRemaining").innerText = remaining;
+    document.getElementById("editRemaining").innerText = fmtMoney(remaining);
 
 }
 
@@ -797,7 +813,7 @@ function openPartialPopup(){
         .innerText.replace("₹","")
     );
 
-    document.getElementById("partialTotal").innerText = total;
+    document.getElementById("partialTotal").innerText = fmtMoney(total);
 
     let oldPaid =
         Number(document.getElementById("editPaidAmount").value) || 0;
@@ -805,7 +821,7 @@ function openPartialPopup(){
     document.getElementById("partialPaidAmount").value = oldPaid;
 
     document.getElementById("partialRemaining").innerText =
-        total-oldPaid;
+        fmtMoney(total-oldPaid);
 
     document.getElementById("partialPaymentPopup").style.display="flex";
 
@@ -828,7 +844,7 @@ function updatePartialRemaining(){
     }
 
     document.getElementById("partialRemaining").innerText=
-        total-paid;
+        fmtMoney(total-paid);
 
 }
 function savePartialPayment(){

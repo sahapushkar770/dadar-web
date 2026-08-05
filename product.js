@@ -11,6 +11,14 @@ let tempFlavours = [];
 
 let editFlavours = [];
 
+// ===========================
+// MONEY HELPER
+// ===========================
+
+function fmtMoney(n) {
+    return (Number(n) || 0).toFixed(2);
+}
+
 
 
 // ===========================
@@ -96,7 +104,7 @@ function displayProducts(){
 
 
             <div class="product-price">
-                ₹${product.price}
+                ₹${fmtMoney(product.price)}
             </div>
 
 
@@ -386,7 +394,7 @@ function openDetails(index){
 
     document.getElementById("detailsPrice")
     .innerHTML=
-    "Price: ₹"+product.price;
+    "Price: ₹"+fmtMoney(product.price);
 
 
 
