@@ -428,10 +428,12 @@ function saveBill() {
 
     let paid = 0;
     let remaining = grandTotal;
+    let paymentStatusLabel = "Unpaid";
 
     if (paymentType === "paid") {
         paid = grandTotal;
         remaining = 0;
+        paymentStatusLabel = "Paid";
     }
     else if (paymentType === "partial") {
         paid = Number(document.getElementById("paidAmount").value) || 0;
@@ -441,6 +443,9 @@ function saveBill() {
         }
 
         remaining = grandTotal - paid;
+
+        // If the partial amount happens to cover the full total, treat it as Paid
+        paymentStatusLabel = remaining === 0 ? "Paid" : "Partial";
     }
 
     const currentBill = {
@@ -461,7 +466,7 @@ function saveBill() {
         grandTotal: grandTotal,
 
         payment: {
-            status: paymentType,
+            status: paymentStatusLabel,
             paidAmount: paid,
             remainingAmount: remaining
         }
