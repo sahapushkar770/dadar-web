@@ -473,8 +473,11 @@ function saveEditedBill() {
 
     };
 
-    // Save AFTER updating everything
-    localStorage.setItem("bills", JSON.stringify(bills));
+    // Save AFTER updating everything.
+    // Note: `bills` may be a filtered subset (party view). Since its bill objects
+    // are the same object references as in `allBills`, the edits above already
+    // apply there too — so we persist the full allBills, not the filtered view.
+    localStorage.setItem("bills", JSON.stringify(allBills));
 
     closeDetailsPopup();
 
@@ -506,11 +509,27 @@ function closeDeletePopup() {
 
 function confirmDelete() {
     if (selectedIndex !== -1) {
+        const billToDelete = bills[selectedIndex];
+
+        // Remove from the full dataset (bills may be a filtered party-view subset)
+        const globalIndex = allBills.indexOf(billToDelete);
+        if (globalIndex !== -1) {
+            allBills.splice(globalIndex, 1);
+        }
+
+        localStorage.setItem("bills", JSON.stringify(allBills));
+
+        // Keep the local view array in sync
         bills.splice(selectedIndex, 1);
-        localStorage.setItem("bills", JSON.stringify(bills));
-        console.log("All Bills:", allBills);
-        console.log("Selected Party:", selectedParty);
+
+        selectedIndex = -1;
+
         displayBills();
+
+        if (window.billMode === "party") {
+            loadPartySummary();
+        }
+
         closeDeletePopup();
     }
 }
