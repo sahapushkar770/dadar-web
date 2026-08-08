@@ -315,7 +315,7 @@ function displayBills() {
                         </button>
 
                         <button class="delete"
-                            onclick="openDeletePopup(${i})">
+                            onclick="openDeletePopup('${bill.billId}')">
                             🗑️ Delete
                         </button>
 
@@ -551,8 +551,10 @@ function printBill() {
 // ==========================================
 // REMOVE OPERATIONS DATA PIPELINE
 // ==========================================
-function openDeletePopup(index) {
-    selectedIndex = index;
+function openDeletePopup(billId) {
+
+    selectedIndex = billId;
+
     document.getElementById("deletePopup").style.display = "flex";
 }
 
@@ -561,39 +563,82 @@ function closeDeletePopup() {
 }
 
 function confirmDelete() {
-    if (selectedIndex !== -1) {
-        const billToDelete = bills[selectedIndex];
 
-        // Remove from the full dataset (bills may be a filtered party-view subset)
-        const globalIndex = allBills.indexOf(billToDelete);
-        if (globalIndex !== -1) {
-            allBills.splice(globalIndex, 1);
-        }
+    if (selectedIndex === -1) return;
 
-        localStorage.setItem("bills", JSON.stringify(allBills));
+    // selectedIndex now stores the unique Bill ID
+    const billId = selectedIndex;
 
-        // Move into trash instead of erasing — restorable for TRASH_RETENTION_DAYS
-        deletedBills.push({
-            bill: billToDelete,
-            deletedAt: Date.now()
-        });
-        localStorage.setItem("deletedBills", JSON.stringify(deletedBills));
+    // Find the exact bill in the full dataset
+    const globalIndex = allBills.findIndex(
+        bill => bill.billId === billId
+    );
 
-        // Keep the local view array in sync
-        bills.splice(selectedIndex, 1);
+    if (globalIndex === -1) {
 
-        selectedIndex = -1;
-
-        displayBills();
-
-        if (window.billMode === "party") {
-            loadPartySummary();
-        }
-
-        updateTrashBadge();
+        console.error("Bill not found:", billId);
 
         closeDeletePopup();
+
+        return;
     }
+
+    // Get the exact bill before removing it
+    const billToDelete = allBills[globalIndex];
+
+    // ==========================================
+    // MOVE BILL TO TRASH
+    // ==========================================
+
+    deletedBills.push({
+        bill: billToDelete,
+        deletedAt: Date.now()
+    });
+
+    localStorage.setItem(
+        "deletedBills",
+        JSON.stringify(deletedBills)
+    );
+
+    // ==========================================
+    // REMOVE ONLY THIS BILL
+    // ==========================================
+
+    allBills.splice(globalIndex, 1);
+
+    localStorage.setItem(
+        "bills",
+        JSON.stringify(allBills)
+    );
+
+    // ==========================================
+    // UPDATE CURRENT VIEW
+    // ==========================================
+
+    if (window.billMode === "party") {
+
+        bills = allBills.filter(bill =>
+            bill.party &&
+            selectedParty &&
+            bill.party.name === selectedParty.name &&
+            bill.party.phone === selectedParty.phone
+        );
+
+        loadPartySummary();
+
+    } else {
+
+        bills = allBills;
+
+    }
+
+    selectedIndex = -1;
+
+    displayBills();
+
+    updateTrashBadge();
+
+    closeDeletePopup();
 }
 
 // ==========================================
