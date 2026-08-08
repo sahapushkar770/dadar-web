@@ -43,6 +43,160 @@
         +
     </button>
 
+    <!-- ================= FILTER PANEL ================= -->
+
+<div class="filter-panel" id="filterPanel">
+
+    <div class="filter-header">
+
+        <h3>
+            <i class="fa-solid fa-filter"></i>
+            Filter Bills
+        </h3>
+
+        <button
+            class="filter-close"
+            onclick="toggleFilterPanel()">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <label>Area</label>
+
+        <select id="filterArea">
+            <option value="">All Areas</option>
+        </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <label>Payment Status</label>
+
+        <select id="filterPayment">
+
+            <option value="">All Status</option>
+
+            <option value="Paid">Paid</option>
+
+            <option value="Partial">Partial</option>
+
+            <option value="Unpaid">Unpaid</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+    <label for="filterDate">
+        Date
+    </label>
+
+    <select id="filterDate">
+
+        <option value="">
+            All Dates
+        </option>
+
+        <option value="today">
+            Today
+        </option>
+
+        <option value="yesterday">
+            Yesterday
+        </option>
+
+        <option value="7days">
+            Last 7 Days
+        </option>
+
+        <option value="30days">
+            Last 30 Days
+        </option>
+
+        <option value="specific">
+            Specific Date
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- SPECIFIC DATE -->
+
+<div
+    class="filter-group"
+    id="specificDateGroup"
+    style="display:none;">
+
+    <label for="specificDate">
+        Select Date
+    </label>
+
+    <input
+        type="date"
+        id="specificDate">
+
+</div>
+
+
+    <div class="filter-actions">
+
+        <button
+            class="clear-filter-btn"
+            onclick="clearFilters()">
+
+            Clear
+
+        </button>
+
+        <button
+            class="apply-filter-btn"
+            onclick="applyFilters()">
+
+            <i class="fa-solid fa-check"></i>
+            Apply
+
+        </button>
+
+    </div>
+
+</div>
+
+    <!-- ================= FILTER BUTTON ================= -->
+
+<button
+    class="filter-fab"
+    id="filterBtn"
+    onclick="toggleFilterPanel()">
+
+    <i class="fa-solid fa-filter"></i>
+
+</button>
+
+
+<!-- ================= FLOATING ADD BUTTON ================= -->
+
+<button
+    class="fab"
+    onclick="window.location.href='making-bill.html'">
+
+    +
+
+</button>
+
+
+
     <!-- ================= INVOICE DETAILS & EDIT POPUP ================= -->
     <div class="popup" id="detailsPopup">
         <div class="popup-box">

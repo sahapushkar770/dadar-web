@@ -551,3 +551,269 @@ header h1{
     margin-right: 4px;
     font-size: 12px;
 }
+
+/* =========================
+   FLOATING FILTER BUTTON
+========================= */
+
+.filter-fab{
+    position:fixed;
+    right:25px;
+    bottom:100px;
+
+    width:55px;
+    height:55px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#075E54;
+    color:white;
+
+    font-size:20px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    box-shadow:0 6px 15px rgba(0,0,0,.3);
+
+    z-index:1000;
+
+    transition:.25s;
+}
+
+.filter-fab:hover{
+    background:#128C7E;
+    transform:scale(1.08);
+}
+
+
+/* =========================
+   FLOATING ADD BUTTON
+========================= */
+
+.fab{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+
+    width:65px;
+    height:65px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#25D366;
+    color:white;
+
+    font-size:40px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    box-shadow:0 6px 15px rgba(0,0,0,.3);
+
+    z-index:1000;
+
+    transition:.25s;
+}
+
+.fab:hover{
+    background:#128C7E;
+    transform:scale(1.08);
+}
+
+/* =========================
+   FILTER PANEL
+========================= */
+
+.filter-panel{
+    position:fixed;
+
+    right:25px;
+    bottom:170px;
+
+    width:300px;
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+
+    display:none;
+    flex-direction:column;
+
+    z-index:999;
+
+    animation:filterOpen .2s ease;
+}
+
+@keyframes filterOpen{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+
+/* HEADER */
+
+.filter-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:15px;
+}
+
+.filter-header h3{
+
+    color:#075E54;
+    margin:0;
+
+}
+
+.filter-close{
+
+    border:none;
+    background:none;
+
+    font-size:22px;
+
+    color:#777;
+
+    cursor:pointer;
+}
+
+
+/* FILTER GROUP */
+
+.filter-group{
+
+    margin-bottom:15px;
+
+}
+
+.filter-group label{
+
+    display:block;
+
+    font-weight:bold;
+
+    margin-bottom:6px;
+
+    color:#333;
+
+}
+
+.filter-group select{
+
+    width:100%;
+
+    padding:10px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    outline:none;
+
+    font-size:14px;
+
+}
+
+.filter-group select:focus{
+
+    border-color:#075E54;
+
+}
+
+
+/* BUTTONS */
+
+.filter-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:5px;
+
+}
+
+.clear-filter-btn,
+.apply-filter-btn{
+
+    flex:1;
+
+    padding:10px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+.clear-filter-btn{
+
+    background:#eee;
+    color:#555;
+
+}
+
+.apply-filter-btn{
+
+    background:#075E54;
+    color:white;
+
+}
+
+/* =========================
+   FILTER SELECTED BOX
+========================= */
+
+.filter-group select,
+.filter-group input[type="date"] {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+/* When selected / focused */
+.filter-group select:focus,
+.filter-group input[type="date"]:focus {
+    border-color: #075E54;
+    box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.15);
+}
+
+/* Date box */
+#specificDate {
+    cursor: pointer;
+}

@@ -40,9 +40,47 @@ function closeAreaPopup(){
 
 // Load parties when page opens
 window.onload = function () {
+
     displayParties();
+
     loadAreaDropdowns();
-    document.getElementById("search").addEventListener("keyup", searchParty);
+
+    document
+        .getElementById("search")
+        .addEventListener("keyup", searchParty);
+
+
+    // ===========================
+    // OPEN EDIT FROM PARTY DETAILS
+    // ===========================
+
+    const editPartyRequest =
+        localStorage.getItem("editPartyRequest");
+
+    if (editPartyRequest === "true") {
+
+        localStorage.removeItem("editPartyRequest");
+
+        const selectedParty =
+            JSON.parse(
+                localStorage.getItem("selectedParty")
+            );
+
+        if (selectedParty) {
+
+            const index = parties.findIndex(party =>
+                party.name === selectedParty.name &&
+                party.phone === selectedParty.phone
+            );
+
+            if (index !== -1) {
+                editParty(index);
+            }
+
+        }
+
+    }
+
 };
 
 // ===========================

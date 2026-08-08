@@ -16,6 +16,17 @@ let editPaidAmount = 0;
 let editRemainingAmount = 0;
 
 // ==========================================
+// FILTER STATE
+// ==========================================
+
+let activeFilters = {
+    area: "",
+    payment: "",
+    date: "",
+    specificDate: ""
+};
+
+// ==========================================
 // TRASH (RECENTLY DELETED BILLS)
 // Deleted bills go here instead of being erased immediately, tagged with
 // when they were deleted. Anything older than TRASH_RETENTION_MS gets
@@ -59,6 +70,8 @@ window.onload = function () {
     bill.party.phone === selectedParty.phone
 
     
+
+    
     
 );
     
@@ -79,6 +92,10 @@ window.onload = function () {
 
     displayBills();
 
+    loadFilterOptions();
+
+    updateFilterButton();
+
     updateTrashBadge();
 
     let search = document.getElementById("search");
@@ -86,6 +103,17 @@ window.onload = function () {
     if(search){
 
         search.addEventListener("keyup", searchBills);
+
+        let filterDate = document.getElementById("filterDate");
+
+            if(filterDate){
+
+                filterDate.addEventListener(
+                    "change",
+                    handleDateFilterChange
+                );
+
+}
 
     }
 
@@ -272,7 +300,8 @@ function displayBills() {
 
         <div class="bill-card" onclick="openDetailsPopup(${i})">
 
-            <div class="avatar">
+            <div class="avatar"
+                onclick="event.stopPropagation(); openPartyDetailsFromBill(${i})">
                 ${avatarChar}
             </div>
 
@@ -1125,5 +1154,371 @@ function savePartialPayment(){
 function closePartialPopup(){
 
     document.getElementById("partialPaymentPopup").style.display="none";
+
+}
+
+// ==========================================
+// OPEN PARTY DETAILS FROM SHOW BILL
+// ==========================================
+
+function openPartyDetailsFromBill(index) {
+
+    const bill = bills[index];
+
+    if (!bill || !bill.party) {
+        return;
+    }
+
+    // Find the actual party from Party Data
+    const party = allParties.find(p =>
+        p.name === bill.party.name &&
+        p.phone === bill.party.phone
+    );
+
+    if (!party) {
+        console.error("Party not found:", bill.party);
+        return;
+    }
+
+    // Save selected party
+    localStorage.setItem(
+        "selectedParty",
+        JSON.stringify(party)
+    );
+
+    // Open Party Details
+    window.location.href = "party-details.html";
+}
+
+// ==========================================
+// FILTER PANEL
+// ==========================================
+
+function toggleFilterPanel() {
+
+    const panel = document.getElementById("filterPanel");
+
+    if (!panel) return;
+
+    if (panel.style.display === "flex") {
+
+        panel.style.display = "none";
+
+    } else {
+
+        panel.style.display = "flex";
+
+    }
+}
+
+// ==========================================
+// BILL FILTER SYSTEM
+// ==========================================
+
+function applyFilters() {
+
+    activeFilters.area =
+        document.getElementById("filterArea").value;
+
+    activeFilters.payment =
+        document.getElementById("filterPayment").value;
+
+    activeFilters.date =
+        document.getElementById("filterDate").value;
+
+    activeFilters.specificDate =
+        document.getElementById("specificDate").value;
+
+    updateFilterButton();
+
+    filterBills();
+
+    document.getElementById("filterPanel").style.display = "none";
+}
+
+
+// ==========================================
+// FILTER BILLS
+// ==========================================
+
+function filterBills() {
+
+    let filtered = allBills.filter(bill => {
+
+        // --------------------------
+        // AREA
+        // --------------------------
+
+        if (activeFilters.area) {
+
+            const party = allParties.find(p =>
+                bill.party &&
+                p.name === bill.party.name &&
+                p.phone === bill.party.phone
+            );
+
+            if (
+                !party ||
+                party.area !== activeFilters.area
+            ) {
+                return false;
+            }
+
+        }
+
+
+        // --------------------------
+        // PAYMENT
+        // --------------------------
+
+        if (activeFilters.payment) {
+
+            let status =
+                bill.payment?.status || "Unpaid";
+
+            // If remaining is zero, treat it as Paid
+            if (
+                Number(bill.payment?.remainingAmount || 0) <= 0
+            ) {
+                status = "Paid";
+            }
+
+            if (status !== activeFilters.payment) {
+                return false;
+            }
+
+        }
+
+
+        // --------------------------
+        // DATE
+        // --------------------------
+
+       if (activeFilters.date) {
+
+    if (!bill.date) return false;
+
+    const billDate = parseBillDate(bill.date);
+
+    if (!billDate) return false;
+
+
+    if (activeFilters.date === "specific") {
+
+        if (!activeFilters.specificDate) {
+            return false;
+        }
+
+        const selectedDate =
+            new Date(activeFilters.specificDate);
+
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (billDate.getTime() !== selectedDate.getTime()) {
+            return false;
+        }
+
+    }
+
+    else {
+
+        const today = new Date();
+
+        today.setHours(0, 0, 0, 0);
+
+        const difference =
+            Math.floor(
+                (today - billDate) /
+                (24 * 60 * 60 * 1000)
+            );
+
+
+        if (activeFilters.date === "today") {
+
+            if (difference !== 0) return false;
+
+        }
+
+        else if (activeFilters.date === "yesterday") {
+
+            if (difference !== 1) return false;
+
+        }
+
+        else if (activeFilters.date === "7days") {
+
+            if (difference < 0 || difference > 6)
+                return false;
+
+        }
+
+        else if (activeFilters.date === "30days") {
+
+            if (difference < 0 || difference > 29)
+                return false;
+
+        }
+
+    }
+
+}
+
+        return true;
+
+    });
+
+    // Keep current bill view updated
+    bills = filtered;
+
+    displayBills();
+
+    // Apply existing search on top of filter
+    searchBills();
+}
+
+
+// ==========================================
+// PARSE BILL DATE
+// ==========================================
+
+function parseBillDate(dateString) {
+
+    const parts = dateString.split("/");
+
+    if (parts.length !== 3) return null;
+
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+
+    const date = new Date(year, month, day);
+
+    date.setHours(0,0,0,0);
+
+    return date;
+}
+
+
+// ==========================================
+// CLEAR FILTERS
+// ==========================================
+
+function clearFilters() {
+
+    activeFilters = {
+        area: "",
+        payment: "",
+        date: "",
+        specificDate: ""
+    };
+
+    document.getElementById("filterArea").value = "";
+    document.getElementById("filterPayment").value = "";
+    document.getElementById("filterDate").value = "";
+    document.getElementById("specificDate").value = "";
+
+    document.getElementById("specificDateGroup").style.display = "none";
+
+    bills = allBills;
+
+    displayBills();
+
+    searchBills();
+
+    updateFilterButton();
+
+}
+
+
+// ==========================================
+// FILTER BUTTON COLOR
+// ==========================================
+
+function updateFilterButton() {
+
+    const button =
+        document.getElementById("filterBtn");
+
+    if (!button) return;
+
+    const filterApplied =
+        activeFilters.party ||
+        activeFilters.area ||
+        activeFilters.payment ||
+        activeFilters.date;
+
+    if (filterApplied) {
+
+        button.style.background = "#dc3545";
+
+    } else {
+
+        button.style.background = "#075E54";
+
+    }
+
+}
+
+// ==========================================
+// LOAD FILTER OPTIONS
+// ==========================================
+
+// ==========================================
+// LOAD FILTER OPTIONS
+// ==========================================
+
+function loadFilterOptions() {
+
+    const areaSelect =
+        document.getElementById("filterArea");
+
+    if (!areaSelect) return;
+
+    // Keep only the default option
+    areaSelect.innerHTML = `
+        <option value="">
+            All Areas
+        </option>
+    `;
+
+    // Get unique areas from all parties
+    const uniqueAreas = [
+        ...new Set(
+            allParties
+                .map(party => party.area)
+                .filter(area => area && area.trim() !== "")
+        )
+    ];
+
+    uniqueAreas.forEach(area => {
+
+        areaSelect.innerHTML += `
+            <option value="${area}">
+                ${area}
+            </option>
+        `;
+
+    });
+
+}
+
+function handleDateFilterChange() {
+
+    const dateType =
+        document.getElementById("filterDate").value;
+
+    const dateGroup =
+        document.getElementById("specificDateGroup");
+
+    if (dateType === "specific") {
+
+        dateGroup.style.display = "block";
+
+    } else {
+
+        dateGroup.style.display = "none";
+
+        document.getElementById("specificDate").value = "";
+    }
 
 }
