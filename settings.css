@@ -1,0 +1,188 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+
+/* ================= HEADER ================= */
+
+header{
+    width:100%;
+
+    background:#075E54;
+
+    border-radius:0 0 18px 18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+    padding:20px 30px;
+
+    color:white;
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+header h1{
+    flex:1;
+    text-align:center;
+    margin-right:40px;
+    font-size:30px;
+}
+
+
+/* ================= BACK BUTTON ================= */
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    font-size:22px;
+}
+
+.back-btn:hover{
+    background:rgba(255,255,255,.25);
+}
+
+
+/* ================= SETTINGS CONTENT ================= */
+
+.settings-container{
+    flex:1;
+
+    width:95%;
+    max-width:1100px;
+
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:30px 0;
+}
+
+
+/* ================= SETTINGS CARD ================= */
+
+.settings-card{
+    width:100%;
+    max-width:500px;
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:45px 30px;
+
+    text-align:center;
+
+    box-shadow:0 10px 20px rgba(0,0,0,.2);
+}
+
+
+/* ================= SETTINGS ICON ================= */
+
+.settings-icon{
+    font-size:55px;
+
+    color:#075E54;
+
+    margin-bottom:20px;
+}
+
+
+/* ================= TEXT ================= */
+
+.settings-card h2{
+    color:#075E54;
+
+    font-size:26px;
+
+    margin-bottom:15px;
+}
+
+.settings-card p{
+    color:#666;
+
+    font-size:15px;
+
+    line-height:1.6;
+
+    margin-bottom:25px;
+}
+
+
+/* ================= COMING SOON ================= */
+
+.settings-card span{
+    display:inline-block;
+
+    background:#075E54;
+
+    color:white;
+
+    padding:9px 18px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:bold;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+    header{
+        padding:18px 20px;
+    }
+
+    header h1{
+        font-size:26px;
+    }
+
+    .back-btn{
+        left:20px;
+
+        width:38px;
+        height:38px;
+
+        font-size:16px;
+    }
+
+    .settings-container{
+        width:90%;
+    }
+
+    .settings-card{
+        padding:40px 22px;
+    }
+
+    .settings-icon{
+        font-size:50px;
+    }
+
+    .settings-card h2{
+        font-size:23px;
+    }
+
+    .settings-card p{
+        font-size:14px;
+    }
+
+}
+
