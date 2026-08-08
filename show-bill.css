@@ -540,3 +540,14 @@ header h1{
 .restore-btn:hover{
     background:#0b7c6f;
 }
+
+.bill-party-area{
+    margin: 2px 0 4px;
+    font-size: 13px;
+    color: #666;
+}
+
+.bill-party-area i{
+    margin-right: 4px;
+    font-size: 12px;
+}

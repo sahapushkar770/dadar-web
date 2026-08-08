@@ -4,6 +4,7 @@
 
 
 let allBills = JSON.parse(localStorage.getItem("bills")) || [];
+let allParties = JSON.parse(localStorage.getItem("parties")) || [];
 let bills = [];
 let selectedParty = {};
 let selectedIndex = -1;
@@ -57,7 +58,13 @@ window.onload = function () {
     bill.party.name === selectedParty.name &&
     bill.party.phone === selectedParty.phone
 
+    
+    
 );
+    
+
+    
+
     console.log("Selected Party:", selectedParty);
     console.log("All Bills:", allBills);
     console.log("Filtered Bills:", bills);
@@ -179,6 +186,12 @@ function displayBills() {
         let avatarChar =
             displayPartyName.charAt(0).toUpperCase();
 
+        let party = allParties.find(p =>
+                p.name === displayPartyName
+            );
+
+        let displayArea = party ? party.area : "";    
+
         // ================= PAYMENT =================
 
         let payment = bill.payment || {
@@ -267,7 +280,14 @@ function displayBills() {
 
                 <h3>${displayPartyName}</h3>
 
-                <p>Bill ID : ${displayBillId}</p>
+                ${displayArea ? `
+                    <p class="bill-party-area">
+                        <i class="fa-solid fa-location-dot"></i>
+                        ${displayArea}
+                    </p>
+                ` : ""}
+
+<p>Bill ID : ${displayBillId}</p>
 
                 <span>Date : ${displayDate}</span>
 
