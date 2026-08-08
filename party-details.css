@@ -671,3 +671,20 @@ header h1{
     font-weight:bold;
 
 }
+
+/* ===========================
+   PARTY PROFILE LOCATION
+=========================== */
+
+#partyArea {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+}
+
+#partyArea i {
+    margin-right: 5px;
+    font-size: 13px;
+}

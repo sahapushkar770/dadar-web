@@ -21,6 +21,26 @@
 
     <h1>Party Data</h1>
 
+    <div class="header-menu">
+
+        <button class="header-menu-btn" onclick="toggleHeaderMenu()">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+
+        <div class="header-dropdown" id="headerDropdown">
+
+            <button onclick="openAreaPopup()">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                Manage Areas
+
+            </button>
+
+        </div>
+
+    </div>
+
 </header>
 
 <div class="search-box">
@@ -90,13 +110,15 @@
 
 <!-- ================= FLOATING BUTTON ================= -->
 
+
+
 <button
 class="fab"
 onclick="openAddPopup()">
 
     <i class="fa-solid fa-plus"></i>
-
 </button>
+
 
 <!-- ================= ADD POPUP ================= -->
 
@@ -118,6 +140,9 @@ placeholder="Phone Number"
 maxlength="10"
 inputmode="numeric"
 oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+
+<select id="partyArea"></select>
+
 
 <div class="popup-buttons">
 
@@ -161,6 +186,8 @@ id="editPhone"
 maxlength="10"
 inputmode="numeric"
 oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+
+<select id="editArea"></select>
 
 <div class="popup-buttons">
 
@@ -221,6 +248,45 @@ Cancel
 </div>
 
 </div>
+
+</div>
+
+<!-- ================= AREA POPUP ================= -->
+
+<div class="popup" id="areaPopup">
+
+    <div class="popup-box">
+
+        <h2>Manage Areas</h2>
+
+        <div class="area-add">
+
+            <input
+                type="text"
+                id="areaName"
+                placeholder="Enter Area">
+
+            <button onclick="saveArea()">
+                Add
+            </button>
+
+        </div>
+
+        <div id="areaList"></div>
+
+        <div class="popup-buttons">
+
+            <button
+                class="cancel"
+                onclick="closeAreaPopup()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
 

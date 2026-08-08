@@ -66,9 +66,10 @@ function displayParties() {
                     ${party.name}
                 </h3>
 
-                <p>
-                    ${party.phone}
-                </p>
+                <span class="party-area">
+                    <i class="fa-solid fa-location-dot"></i>
+                    ${party.area || "No Area"}
+                </span>
 
             </div>
 
