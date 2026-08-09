@@ -287,44 +287,6 @@ header h1{
     border-bottom:none;
 }
 
-.modal-qty-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.modal-qty-box button {
-    width: 26px;
-    height: 26px;
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.modal-qty-box .m-minus { background: #dc3545; }
-.modal-qty-box .m-plus { background: #25D366; }
-
-.modal-qty-box span {
-    width: 20px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.modal-summary{
-    border-top:2px dashed #ccc;
-    padding-top:12px;
-    margin-bottom:20px;
-}
-
-.summary-row{
-    display:flex;
-    justify-content:space-between;
-    font-size:16px;
-    font-weight:bold;
-    margin-bottom:6px;
-}
 
 /* ================= MODAL BUTTONS ================= */
 .popup-buttons{
@@ -816,4 +778,109 @@ header h1{
 /* Date box */
 #specificDate {
     cursor: pointer;
+}
+
+/* =========================
+   KEYBOARD QUANTITY INPUT
+========================= */
+
+/* =========================
+   QUANTITY BUTTONS
+========================= */
+
+.modal-qty-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+}
+
+.modal-qty-box button{
+    width:30px;
+    height:30px;
+
+    border:none;
+    border-radius:50%;
+
+    color:#fff;
+    font-size:18px;
+    font-weight:bold;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+/* MINUS BUTTON */
+.modal-qty-box .m-minus{
+    background:#dc3545;
+}
+
+/* PLUS BUTTON */
+.modal-qty-box .m-plus{
+    background:#25D366;
+}
+
+/* HOVER */
+.modal-qty-box .m-minus:hover{
+    background:#b02a37;
+    transform:scale(1.08);
+}
+
+.modal-qty-box .m-plus:hover{
+    background:#128C7E;
+    transform:scale(1.08);
+}
+
+/* CLICK */
+.modal-qty-box button:active{
+    transform:scale(0.92);
+}
+
+.modal-qty-input{
+    width:50px;
+    height:32px;
+    text-align:center;
+    border:1px solid #ccc;
+    border-radius:6px;
+    outline:none;
+    font-size:15px;
+    font-weight:bold;
+    background:#fff;
+}
+
+/* Remove browser number-input arrows */
+
+.modal-qty-input::-webkit-inner-spin-button,
+.modal-qty-input::-webkit-outer-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+}
+
+.modal-qty-input:focus{
+    border-color:#075E54;
+    box-shadow:0 0 0 2px rgba(7,94,84,.15);
+}
+
+.modal-item-info{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    flex:1;
+    min-width:0;
+}
+
+.modal-item-info strong{
+    color:#222;
+    font-size:14px;
+    word-break:break-word;
+}
+
+.modal-item-info span{
+    color:#777;
+    font-size:13px;
 }

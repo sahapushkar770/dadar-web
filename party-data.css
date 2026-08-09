@@ -597,3 +597,21 @@ header{
 
 }
 
+.party-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
+
+.party-remaining {
+    font-size: 18px;
+    font-weight: bold;
+    color: #dc3545;
+    white-space: nowrap;
+}
+
+.party-remaining.no-due {
+    color: #28a745;
+    font-weight: bold;
+}

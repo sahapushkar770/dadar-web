@@ -128,30 +128,33 @@ function displayProducts() {
 
                     </div>
 
-                    <div class="qty-box">
+                <div class="qty-box">
 
-                        <button
-                            class="minus"
-                            onclick="decrease(${index},0)">
-                            -
-                        </button>
+                    <button
+                        class="minus"
+                        onclick="decrease(${index},0)">
+                        -
+                    </button>
 
-                        <span
-                            id="qty-${index}-0">
+                    <input
+                            type="number"
+                            class="qty-input"
+                            id="qty-${index}-0"
+                            value="0"
+                            min="0"
+                            onchange="changeQuantityInput(${index},0,this.value)"
+                            oninput="changeQuantityInput(${index},0,this.value)"
+                        >
 
-                            0
-
-                        </span>
-
-                        <button
-                            class="plus"
-                            onclick="increase(${index},0)">
-                            +
-                        </button>
-
-                    </div>
+                    <button
+                        class="plus"
+                        onclick="increase(${index},0)">
+                        +
+                    </button>
 
                 </div>
+
+                    </div>
 
             </div>
 
@@ -201,12 +204,15 @@ function displayProducts() {
 
                         </button>
 
-                        <span
-                            id="qty-${index}-${fIndex}">
-
-                            0
-
-                        </span>
+                        <input
+                            type="number"
+                            class="qty-input"
+                            id="qty-${index}-${fIndex}"
+                            value="0"
+                            min="0"
+                            onchange="changeQuantityInput(${index},${fIndex},this.value)"
+                            oninput="changeQuantityInput(${index},${fIndex},this.value)"
+                        >
 
                         <button
                             class="plus"
@@ -285,11 +291,13 @@ function increase(productIndex, flavourIndex) {
 
     quantities[key]++;
 
-    document.getElementById("qty-" + key).innerHTML =
-        quantities[key];
+    const input = document.getElementById("qty-" + key);
+
+    if (input) {
+        input.value = quantities[key];
+    }
 
     updateBill();
-
 }
 
 // ===========================
@@ -308,11 +316,38 @@ function decrease(productIndex, flavourIndex) {
         quantities[key]--;
     }
 
-    document.getElementById("qty-" + key).innerHTML =
-        quantities[key];
+    const input = document.getElementById("qty-" + key);
+
+    if (input) {
+        input.value = quantities[key];
+    }
 
     updateBill();
+}
 
+// ===========================
+// KEYBOARD QUANTITY INPUT
+// ===========================
+
+function changeQuantityInput(productIndex, flavourIndex, value) {
+
+    let key = productIndex + "-" + flavourIndex;
+
+    let qty = parseInt(value);
+
+    if (isNaN(qty) || qty < 0) {
+        qty = 0;
+    }
+
+    quantities[key] = qty;
+
+    const input = document.getElementById("qty-" + key);
+
+    if (input) {
+        input.value = qty;
+    }
+
+    updateBill();
 }
 
 // ===========================
@@ -556,11 +591,10 @@ function clearBill() {
     quantities = {};
 
     document.querySelectorAll("[id^='qty-']").forEach(qty => {
-        qty.textContent = "0";
+        qty.value = "0";
     });
 
     updateBill();
-
 }
 
 // ===========================

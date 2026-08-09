@@ -427,62 +427,181 @@ roundMoney(payment.paidAmount);
 document.getElementById("editRemaining").innerText =
 fmtMoney(payment.remainingAmount);
 
-editPaymentChanged();
 }
 
 // Renders product rows inside the overlay complete with individual interactive step buttons
 function renderModalItems() {
+
     const container = document.getElementById("modalItemsList");
+
     container.innerHTML = "";
 
     let totalItems = 0;
     let grandTotal = 0;
 
     localModalItems.forEach((item, idx) => {
-        // Fallback calculations for individual items
-        let itemQty = item.qty !== undefined ? item.qty : 0;
-        let itemPrice = item.price !== undefined ? item.price : 0;
-        let itemTotal = roundMoney(item.total !== undefined ? item.total : (itemQty * itemPrice));
+
+        // ==========================
+        // ITEM DATA
+        // ==========================
+
+        let itemQty =
+            item.qty !== undefined
+                ? Number(item.qty)
+                : 1;
+
+        let itemPrice =
+            item.price !== undefined
+                ? Number(item.price)
+                : 0;
+
+        let itemTotal =
+            item.total !== undefined
+                ? Number(item.total)
+                : itemQty * itemPrice;
+
+        itemTotal = roundMoney(itemTotal);
 
         totalItems += itemQty;
-        grandTotal = roundMoney(grandTotal + itemTotal);
-        let flavorLabel = item.flavour ? ` (${item.flavour})` : "";
+
+        grandTotal =
+            roundMoney(grandTotal + itemTotal);
+
+        // ==========================
+        // FLAVOUR
+        // ==========================
+
+        let flavourLabel =
+            item.flavour
+                ? ` (${item.flavour})`
+                : "";
+
+        // ==========================
+        // ITEM ROW
+        // ==========================
 
         container.innerHTML += `
+
         <div class="modal-item-row">
-            <div>
-                <strong>${item.product}</strong>${flavorLabel}<br>
-                <span style="color:#666; font-size:12px;">₹${fmtMoney(itemPrice)} each</span>
+
+            <div class="modal-item-info">
+
+                <strong>
+                    ${item.product || "Unknown Product"}${flavourLabel}
+                </strong>
+
+                <span>
+                    ₹${fmtMoney(itemPrice)}
+                </span>
+
             </div>
+
+
             <div class="modal-qty-box">
-                <button class="m-minus" onclick="changeModalQty(${idx}, -1)">-</button>
-                <span>${itemQty}</span>
-                <button class="m-plus" onclick="changeModalQty(${idx}, 1)">+</button>
+
+                <button
+                    class="m-minus"
+                    onclick="changeModalQty(${idx}, -1)">
+                    -
+                </button>
+
+
+                <input
+                    type="number"
+                    class="modal-qty-input"
+                    value="${itemQty}"
+                    min="1"
+                    onchange="changeModalQtyInput(${idx}, this.value)"
+                    onkeydown="
+                        if(event.key === 'Enter'){
+                            this.blur();
+                        }
+                    "
+                >
+
+
+                <button
+                    class="m-plus"
+                    onclick="changeModalQty(${idx}, 1)">
+                    +
+                </button>
+
             </div>
-            <div style="font-weight:bold; width: 80px; text-align: right;">₹${fmtMoney(itemTotal)}</div>
-        </div>`;
+
+        </div>
+
+        `;
+
     });
 
-    // Fallback support for displaying summary calculations inside the modal
-    let bill = bills[selectedIndex];
-    let displayTotalItems = totalItems || bill.totalItems || 0;
-    let displayGrandTotal = roundMoney(grandTotal || bill.grandTotal || bill.total || 0);
 
-    document.getElementById("modalTotalItems").innerText = displayTotalItems;
-    document.getElementById("modalGrandTotal").innerText = "₹" + fmtMoney(displayGrandTotal);
-    
+    // ==========================
+    // UPDATE SUMMARY
+    // ==========================
+
+    let bill = bills[selectedIndex];
+
+    let displayTotalItems =
+        totalItems ||
+        (bill ? bill.totalItems : 0) ||
+        0;
+
+    let displayGrandTotal =
+        grandTotal ||
+        (bill ? bill.grandTotal : 0) ||
+        0;
+
+    displayGrandTotal =
+        roundMoney(displayGrandTotal);
+
+
+    document.getElementById("modalTotalItems").innerText =
+        displayTotalItems;
+
+    document.getElementById("modalGrandTotal").innerText =
+        "₹" + fmtMoney(displayGrandTotal);
+
 }
 
-// Handles live calculations when mutating values directly inside the invoice modal view screen
 function changeModalQty(index, change) {
-    let item = localModalItems[index];
-    item.qty += change;
 
-    if (item.qty <= 0) {
-        localModalItems.splice(index, 1);
-    } else {
-        item.total = roundMoney(item.qty * item.price);
+    let item = localModalItems[index];
+
+    if (!item) return;
+
+    let newQty = Number(item.qty) + change;
+
+    // Minimum quantity is 1
+    if (newQty < 1) {
+        newQty = 1;
     }
+
+    item.qty = newQty;
+
+    item.total = roundMoney(
+        item.qty * Number(item.price)
+    );
+
+    renderModalItems();
+}
+
+function changeModalQtyInput(index, value) {
+
+    let item = localModalItems[index];
+
+    let qty = parseInt(value);
+
+    // Prevent invalid or empty values
+    if (isNaN(qty) || qty <= 0) {
+        qty = 1;
+    }
+
+    item.qty = qty;
+
+    item.total = roundMoney(
+        item.qty * item.price
+    );
+
     renderModalItems();
 }
 
@@ -1092,12 +1211,9 @@ function editPaymentChanged(){
         "input[name='editPayment']:checked"
     ).value;
 
-    if(type==="partial"){
-
+    if(type === "partial"){
         openPartialPopup();
-
     }
-
 }
 
 function openPartialPopup(){

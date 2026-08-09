@@ -87,6 +87,42 @@ window.onload = function () {
 // Display Parties
 // ===========================
 
+function getPartyRemaining(party) {
+
+    const bills =
+        JSON.parse(localStorage.getItem("bills")) || [];
+
+    let remaining = 0;
+
+    bills.forEach(bill => {
+
+        if (
+            bill.party &&
+            bill.party.name === party.name &&
+            bill.party.phone === party.phone
+        ) {
+
+            if (bill.payment) {
+
+                remaining += Number(
+                    bill.payment.remainingAmount || 0
+                );
+
+            } else {
+
+                remaining += Number(
+                    bill.grandTotal || 0
+                );
+
+            }
+
+        }
+
+    });
+
+    return (Math.round(remaining * 100) / 100).toFixed(2);
+}
+
 function displayParties() {
 
     const partyList = document.getElementById("partyList");
@@ -117,12 +153,27 @@ function displayParties() {
 
             </div>
 
-            <div class="menu" onclick="event.stopPropagation()">
+            <div class="party-right" onclick="event.stopPropagation()">
 
-                <button class="menu-btn"
-                onclick="toggleMenu(this)">
-                    ⋮
-                </button>
+              ${Number(getPartyRemaining(party)) === 0
+                    ? `
+                        <div class="party-remaining no-due">
+                            No Due
+                        </div>
+                    `
+                    : `
+                        <div class="party-remaining">
+                            ₹${getPartyRemaining(party)}
+                        </div>
+                    `
+                }
+
+                <div class="menu">
+
+                    <button class="menu-btn"
+                    onclick="toggleMenu(this)">
+                        ⋮
+                    </button>
 
                 <div class="dropdown">
 
