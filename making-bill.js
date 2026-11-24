@@ -54,11 +54,11 @@ function displayParties() {
         <div class="party-card"
              onclick="selectParty(${index})">
 
- 
-           <div class="avatar"
-                onclick="event.stopPropagation(); openPartyDetails(${index})">
+
+            <div class="avatar">
                 ${firstLetter}
-           </div>
+            </div>
+
 
             <div class="party-info">
 
@@ -125,20 +125,4 @@ function selectParty(index) {
     // Open product billing page
     window.location.href = "bill-products.html";
 
-}
-
-// ===========================
-// OPEN PARTY DETAILS
-// ===========================
-
-function openPartyDetails(index) {
-
-    // Save the selected party
-    localStorage.setItem(
-        "selectedParty",
-        JSON.stringify(parties[index])
-    );
-
-    // Open Party Details
-    window.location.href = "party-details.html";
 }

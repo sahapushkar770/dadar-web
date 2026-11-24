@@ -20,7 +20,10 @@ logoutBtn.addEventListener("click", async () => {
 
         await signOut(auth);
 
-        window.location.href = "../login.html";
+        ["parties","areas","products","bills","deletedBills","billCounter","selectedParty","saha_uid"]
+            .forEach(k => localStorage.removeItem(k));
+
+        window.location.href = "login.html";
 
     } catch (error) {
 

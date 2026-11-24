@@ -4,7 +4,6 @@
 
 
 let allBills = JSON.parse(localStorage.getItem("bills")) || [];
-let allParties = JSON.parse(localStorage.getItem("parties")) || [];
 let bills = [];
 let selectedParty = {};
 let selectedIndex = -1;
@@ -14,17 +13,6 @@ let selectedAddProduct = null;
 let editPaymentStatus = "Unpaid";
 let editPaidAmount = 0;
 let editRemainingAmount = 0;
-
-// ==========================================
-// FILTER STATE
-// ==========================================
-
-let activeFilters = {
-    area: "",
-    payment: "",
-    date: "",
-    specificDate: ""
-};
 
 // ==========================================
 // TRASH (RECENTLY DELETED BILLS)
@@ -69,15 +57,7 @@ window.onload = function () {
     bill.party.name === selectedParty.name &&
     bill.party.phone === selectedParty.phone
 
-    
-
-    
-    
 );
-    
-
-    
-
     console.log("Selected Party:", selectedParty);
     console.log("All Bills:", allBills);
     console.log("Filtered Bills:", bills);
@@ -92,10 +72,6 @@ window.onload = function () {
 
     displayBills();
 
-    loadFilterOptions();
-
-    updateFilterButton();
-
     updateTrashBadge();
 
     let search = document.getElementById("search");
@@ -103,17 +79,6 @@ window.onload = function () {
     if(search){
 
         search.addEventListener("keyup", searchBills);
-
-        let filterDate = document.getElementById("filterDate");
-
-            if(filterDate){
-
-                filterDate.addEventListener(
-                    "change",
-                    handleDateFilterChange
-                );
-
-}
 
     }
 
@@ -214,12 +179,6 @@ function displayBills() {
         let avatarChar =
             displayPartyName.charAt(0).toUpperCase();
 
-        let party = allParties.find(p =>
-                p.name === displayPartyName
-            );
-
-        let displayArea = party ? party.area : "";    
-
         // ================= PAYMENT =================
 
         let payment = bill.payment || {
@@ -300,8 +259,7 @@ function displayBills() {
 
         <div class="bill-card" onclick="openDetailsPopup(${i})">
 
-            <div class="avatar"
-                onclick="event.stopPropagation(); openPartyDetailsFromBill(${i})">
+            <div class="avatar">
                 ${avatarChar}
             </div>
 
@@ -309,14 +267,7 @@ function displayBills() {
 
                 <h3>${displayPartyName}</h3>
 
-                ${displayArea ? `
-                    <p class="bill-party-area">
-                        <i class="fa-solid fa-location-dot"></i>
-                        ${displayArea}
-                    </p>
-                ` : ""}
-
-<p>Bill ID : ${displayBillId}</p>
+                <p>Bill ID : ${displayBillId}</p>
 
                 <span>Date : ${displayDate}</span>
 
@@ -344,7 +295,7 @@ function displayBills() {
                         </button>
 
                         <button class="delete"
-                            onclick="openDeletePopup('${bill.billId}')">
+                            onclick="openDeletePopup(${i})">
                             🗑️ Delete
                         </button>
 
@@ -427,181 +378,62 @@ roundMoney(payment.paidAmount);
 document.getElementById("editRemaining").innerText =
 fmtMoney(payment.remainingAmount);
 
+editPaymentChanged();
 }
 
 // Renders product rows inside the overlay complete with individual interactive step buttons
 function renderModalItems() {
-
     const container = document.getElementById("modalItemsList");
-
     container.innerHTML = "";
 
     let totalItems = 0;
     let grandTotal = 0;
 
     localModalItems.forEach((item, idx) => {
-
-        // ==========================
-        // ITEM DATA
-        // ==========================
-
-        let itemQty =
-            item.qty !== undefined
-                ? Number(item.qty)
-                : 1;
-
-        let itemPrice =
-            item.price !== undefined
-                ? Number(item.price)
-                : 0;
-
-        let itemTotal =
-            item.total !== undefined
-                ? Number(item.total)
-                : itemQty * itemPrice;
-
-        itemTotal = roundMoney(itemTotal);
+        // Fallback calculations for individual items
+        let itemQty = item.qty !== undefined ? item.qty : 0;
+        let itemPrice = item.price !== undefined ? item.price : 0;
+        let itemTotal = roundMoney(item.total !== undefined ? item.total : (itemQty * itemPrice));
 
         totalItems += itemQty;
-
-        grandTotal =
-            roundMoney(grandTotal + itemTotal);
-
-        // ==========================
-        // FLAVOUR
-        // ==========================
-
-        let flavourLabel =
-            item.flavour
-                ? ` (${item.flavour})`
-                : "";
-
-        // ==========================
-        // ITEM ROW
-        // ==========================
+        grandTotal = roundMoney(grandTotal + itemTotal);
+        let flavorLabel = item.flavour ? ` (${item.flavour})` : "";
 
         container.innerHTML += `
-
         <div class="modal-item-row">
-
-            <div class="modal-item-info">
-
-                <strong>
-                    ${item.product || "Unknown Product"}${flavourLabel}
-                </strong>
-
-                <span>
-                    ₹${fmtMoney(itemPrice)}
-                </span>
-
+            <div>
+                <strong>${item.product}</strong>${flavorLabel}<br>
+                <span style="color:#666; font-size:12px;">₹${fmtMoney(itemPrice)} each</span>
             </div>
-
-
             <div class="modal-qty-box">
-
-                <button
-                    class="m-minus"
-                    onclick="changeModalQty(${idx}, -1)">
-                    -
-                </button>
-
-
-                <input
-                    type="number"
-                    class="modal-qty-input"
-                    value="${itemQty}"
-                    min="1"
-                    onchange="changeModalQtyInput(${idx}, this.value)"
-                    onkeydown="
-                        if(event.key === 'Enter'){
-                            this.blur();
-                        }
-                    "
-                >
-
-
-                <button
-                    class="m-plus"
-                    onclick="changeModalQty(${idx}, 1)">
-                    +
-                </button>
-
+                <button class="m-minus" onclick="changeModalQty(${idx}, -1)">-</button>
+                <span>${itemQty}</span>
+                <button class="m-plus" onclick="changeModalQty(${idx}, 1)">+</button>
             </div>
-
-        </div>
-
-        `;
-
+            <div style="font-weight:bold; width: 80px; text-align: right;">₹${fmtMoney(itemTotal)}</div>
+        </div>`;
     });
 
-
-    // ==========================
-    // UPDATE SUMMARY
-    // ==========================
-
+    // Fallback support for displaying summary calculations inside the modal
     let bill = bills[selectedIndex];
+    let displayTotalItems = totalItems || bill.totalItems || 0;
+    let displayGrandTotal = roundMoney(grandTotal || bill.grandTotal || bill.total || 0);
 
-    let displayTotalItems =
-        totalItems ||
-        (bill ? bill.totalItems : 0) ||
-        0;
-
-    let displayGrandTotal =
-        grandTotal ||
-        (bill ? bill.grandTotal : 0) ||
-        0;
-
-    displayGrandTotal =
-        roundMoney(displayGrandTotal);
-
-
-    document.getElementById("modalTotalItems").innerText =
-        displayTotalItems;
-
-    document.getElementById("modalGrandTotal").innerText =
-        "₹" + fmtMoney(displayGrandTotal);
-
+    document.getElementById("modalTotalItems").innerText = displayTotalItems;
+    document.getElementById("modalGrandTotal").innerText = "₹" + fmtMoney(displayGrandTotal);
+    
 }
 
+// Handles live calculations when mutating values directly inside the invoice modal view screen
 function changeModalQty(index, change) {
-
     let item = localModalItems[index];
+    item.qty += change;
 
-    if (!item) return;
-
-    let newQty = Number(item.qty) + change;
-
-    // Minimum quantity is 1
-    if (newQty < 1) {
-        newQty = 1;
+    if (item.qty <= 0) {
+        localModalItems.splice(index, 1);
+    } else {
+        item.total = roundMoney(item.qty * item.price);
     }
-
-    item.qty = newQty;
-
-    item.total = roundMoney(
-        item.qty * Number(item.price)
-    );
-
-    renderModalItems();
-}
-
-function changeModalQtyInput(index, value) {
-
-    let item = localModalItems[index];
-
-    let qty = parseInt(value);
-
-    // Prevent invalid or empty values
-    if (isNaN(qty) || qty <= 0) {
-        qty = 1;
-    }
-
-    item.qty = qty;
-
-    item.total = roundMoney(
-        item.qty * item.price
-    );
-
     renderModalItems();
 }
 
@@ -699,10 +531,8 @@ function printBill() {
 // ==========================================
 // REMOVE OPERATIONS DATA PIPELINE
 // ==========================================
-function openDeletePopup(billId) {
-
-    selectedIndex = billId;
-
+function openDeletePopup(index) {
+    selectedIndex = index;
     document.getElementById("deletePopup").style.display = "flex";
 }
 
@@ -711,82 +541,39 @@ function closeDeletePopup() {
 }
 
 function confirmDelete() {
+    if (selectedIndex !== -1) {
+        const billToDelete = bills[selectedIndex];
 
-    if (selectedIndex === -1) return;
+        // Remove from the full dataset (bills may be a filtered party-view subset)
+        const globalIndex = allBills.indexOf(billToDelete);
+        if (globalIndex !== -1) {
+            allBills.splice(globalIndex, 1);
+        }
 
-    // selectedIndex now stores the unique Bill ID
-    const billId = selectedIndex;
+        localStorage.setItem("bills", JSON.stringify(allBills));
 
-    // Find the exact bill in the full dataset
-    const globalIndex = allBills.findIndex(
-        bill => bill.billId === billId
-    );
+        // Move into trash instead of erasing — restorable for TRASH_RETENTION_DAYS
+        deletedBills.push({
+            bill: billToDelete,
+            deletedAt: Date.now()
+        });
+        localStorage.setItem("deletedBills", JSON.stringify(deletedBills));
 
-    if (globalIndex === -1) {
+        // Keep the local view array in sync
+        bills.splice(selectedIndex, 1);
 
-        console.error("Bill not found:", billId);
+        selectedIndex = -1;
+
+        displayBills();
+
+        if (window.billMode === "party") {
+            loadPartySummary();
+        }
+
+        updateTrashBadge();
 
         closeDeletePopup();
-
-        return;
     }
-
-    // Get the exact bill before removing it
-    const billToDelete = allBills[globalIndex];
-
-    // ==========================================
-    // MOVE BILL TO TRASH
-    // ==========================================
-
-    deletedBills.push({
-        bill: billToDelete,
-        deletedAt: Date.now()
-    });
-
-    localStorage.setItem(
-        "deletedBills",
-        JSON.stringify(deletedBills)
-    );
-
-    // ==========================================
-    // REMOVE ONLY THIS BILL
-    // ==========================================
-
-    allBills.splice(globalIndex, 1);
-
-    localStorage.setItem(
-        "bills",
-        JSON.stringify(allBills)
-    );
-
-    // ==========================================
-    // UPDATE CURRENT VIEW
-    // ==========================================
-
-    if (window.billMode === "party") {
-
-        bills = allBills.filter(bill =>
-            bill.party &&
-            selectedParty &&
-            bill.party.name === selectedParty.name &&
-            bill.party.phone === selectedParty.phone
-        );
-
-        loadPartySummary();
-
-    } else {
-
-        bills = allBills;
-
-    }
-
-    selectedIndex = -1;
-
-    displayBills();
-
-    updateTrashBadge();
-
-    closeDeletePopup();
 }
 
 // ==========================================
@@ -1211,9 +998,12 @@ function editPaymentChanged(){
         "input[name='editPayment']:checked"
     ).value;
 
-    if(type === "partial"){
+    if(type==="partial"){
+
         openPartialPopup();
+
     }
+
 }
 
 function openPartialPopup(){
@@ -1270,371 +1060,5 @@ function savePartialPayment(){
 function closePartialPopup(){
 
     document.getElementById("partialPaymentPopup").style.display="none";
-
-}
-
-// ==========================================
-// OPEN PARTY DETAILS FROM SHOW BILL
-// ==========================================
-
-function openPartyDetailsFromBill(index) {
-
-    const bill = bills[index];
-
-    if (!bill || !bill.party) {
-        return;
-    }
-
-    // Find the actual party from Party Data
-    const party = allParties.find(p =>
-        p.name === bill.party.name &&
-        p.phone === bill.party.phone
-    );
-
-    if (!party) {
-        console.error("Party not found:", bill.party);
-        return;
-    }
-
-    // Save selected party
-    localStorage.setItem(
-        "selectedParty",
-        JSON.stringify(party)
-    );
-
-    // Open Party Details
-    window.location.href = "party-details.html";
-}
-
-// ==========================================
-// FILTER PANEL
-// ==========================================
-
-function toggleFilterPanel() {
-
-    const panel = document.getElementById("filterPanel");
-
-    if (!panel) return;
-
-    if (panel.style.display === "flex") {
-
-        panel.style.display = "none";
-
-    } else {
-
-        panel.style.display = "flex";
-
-    }
-}
-
-// ==========================================
-// BILL FILTER SYSTEM
-// ==========================================
-
-function applyFilters() {
-
-    activeFilters.area =
-        document.getElementById("filterArea").value;
-
-    activeFilters.payment =
-        document.getElementById("filterPayment").value;
-
-    activeFilters.date =
-        document.getElementById("filterDate").value;
-
-    activeFilters.specificDate =
-        document.getElementById("specificDate").value;
-
-    updateFilterButton();
-
-    filterBills();
-
-    document.getElementById("filterPanel").style.display = "none";
-}
-
-
-// ==========================================
-// FILTER BILLS
-// ==========================================
-
-function filterBills() {
-
-    let filtered = allBills.filter(bill => {
-
-        // --------------------------
-        // AREA
-        // --------------------------
-
-        if (activeFilters.area) {
-
-            const party = allParties.find(p =>
-                bill.party &&
-                p.name === bill.party.name &&
-                p.phone === bill.party.phone
-            );
-
-            if (
-                !party ||
-                party.area !== activeFilters.area
-            ) {
-                return false;
-            }
-
-        }
-
-
-        // --------------------------
-        // PAYMENT
-        // --------------------------
-
-        if (activeFilters.payment) {
-
-            let status =
-                bill.payment?.status || "Unpaid";
-
-            // If remaining is zero, treat it as Paid
-            if (
-                Number(bill.payment?.remainingAmount || 0) <= 0
-            ) {
-                status = "Paid";
-            }
-
-            if (status !== activeFilters.payment) {
-                return false;
-            }
-
-        }
-
-
-        // --------------------------
-        // DATE
-        // --------------------------
-
-       if (activeFilters.date) {
-
-    if (!bill.date) return false;
-
-    const billDate = parseBillDate(bill.date);
-
-    if (!billDate) return false;
-
-
-    if (activeFilters.date === "specific") {
-
-        if (!activeFilters.specificDate) {
-            return false;
-        }
-
-        const selectedDate =
-            new Date(activeFilters.specificDate);
-
-        selectedDate.setHours(0, 0, 0, 0);
-
-        if (billDate.getTime() !== selectedDate.getTime()) {
-            return false;
-        }
-
-    }
-
-    else {
-
-        const today = new Date();
-
-        today.setHours(0, 0, 0, 0);
-
-        const difference =
-            Math.floor(
-                (today - billDate) /
-                (24 * 60 * 60 * 1000)
-            );
-
-
-        if (activeFilters.date === "today") {
-
-            if (difference !== 0) return false;
-
-        }
-
-        else if (activeFilters.date === "yesterday") {
-
-            if (difference !== 1) return false;
-
-        }
-
-        else if (activeFilters.date === "7days") {
-
-            if (difference < 0 || difference > 6)
-                return false;
-
-        }
-
-        else if (activeFilters.date === "30days") {
-
-            if (difference < 0 || difference > 29)
-                return false;
-
-        }
-
-    }
-
-}
-
-        return true;
-
-    });
-
-    // Keep current bill view updated
-    bills = filtered;
-
-    displayBills();
-
-    // Apply existing search on top of filter
-    searchBills();
-}
-
-
-// ==========================================
-// PARSE BILL DATE
-// ==========================================
-
-function parseBillDate(dateString) {
-
-    const parts = dateString.split("/");
-
-    if (parts.length !== 3) return null;
-
-    const day = Number(parts[0]);
-    const month = Number(parts[1]) - 1;
-    const year = Number(parts[2]);
-
-    const date = new Date(year, month, day);
-
-    date.setHours(0,0,0,0);
-
-    return date;
-}
-
-
-// ==========================================
-// CLEAR FILTERS
-// ==========================================
-
-function clearFilters() {
-
-    activeFilters = {
-        area: "",
-        payment: "",
-        date: "",
-        specificDate: ""
-    };
-
-    document.getElementById("filterArea").value = "";
-    document.getElementById("filterPayment").value = "";
-    document.getElementById("filterDate").value = "";
-    document.getElementById("specificDate").value = "";
-
-    document.getElementById("specificDateGroup").style.display = "none";
-
-    bills = allBills;
-
-    displayBills();
-
-    searchBills();
-
-    updateFilterButton();
-
-}
-
-
-// ==========================================
-// FILTER BUTTON COLOR
-// ==========================================
-
-function updateFilterButton() {
-
-    const button =
-        document.getElementById("filterBtn");
-
-    if (!button) return;
-
-    const filterApplied =
-        activeFilters.party ||
-        activeFilters.area ||
-        activeFilters.payment ||
-        activeFilters.date;
-
-    if (filterApplied) {
-
-        button.style.background = "#dc3545";
-
-    } else {
-
-        button.style.background = "#075E54";
-
-    }
-
-}
-
-// ==========================================
-// LOAD FILTER OPTIONS
-// ==========================================
-
-// ==========================================
-// LOAD FILTER OPTIONS
-// ==========================================
-
-function loadFilterOptions() {
-
-    const areaSelect =
-        document.getElementById("filterArea");
-
-    if (!areaSelect) return;
-
-    // Keep only the default option
-    areaSelect.innerHTML = `
-        <option value="">
-            All Areas
-        </option>
-    `;
-
-    // Get unique areas from all parties
-    const uniqueAreas = [
-        ...new Set(
-            allParties
-                .map(party => party.area)
-                .filter(area => area && area.trim() !== "")
-        )
-    ];
-
-    uniqueAreas.forEach(area => {
-
-        areaSelect.innerHTML += `
-            <option value="${area}">
-                ${area}
-            </option>
-        `;
-
-    });
-
-}
-
-function handleDateFilterChange() {
-
-    const dateType =
-        document.getElementById("filterDate").value;
-
-    const dateGroup =
-        document.getElementById("specificDateGroup");
-
-    if (dateType === "specific") {
-
-        dateGroup.style.display = "block";
-
-    } else {
-
-        dateGroup.style.display = "none";
-
-        document.getElementById("specificDate").value = "";
-    }
 
 }

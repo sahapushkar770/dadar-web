@@ -2,13 +2,7 @@
 // SAHA ENTERPRISE PARTY DATA
 // ===========================
 
-let parties = JSON.parse(localStorage.getItem("parties")) || [
-    {
-        name: "ABC Traders",
-        phone: "9876543210",
-        area: "Ranaghat"
-    }
-];
+let parties = JSON.parse(localStorage.getItem("parties")) || [];
 
 let selectedIndex = -1;
 
@@ -40,88 +34,14 @@ function closeAreaPopup(){
 
 // Load parties when page opens
 window.onload = function () {
-
     displayParties();
-
     loadAreaDropdowns();
-
-    document
-        .getElementById("search")
-        .addEventListener("keyup", searchParty);
-
-
-    // ===========================
-    // OPEN EDIT FROM PARTY DETAILS
-    // ===========================
-
-    const editPartyRequest =
-        localStorage.getItem("editPartyRequest");
-
-    if (editPartyRequest === "true") {
-
-        localStorage.removeItem("editPartyRequest");
-
-        const selectedParty =
-            JSON.parse(
-                localStorage.getItem("selectedParty")
-            );
-
-        if (selectedParty) {
-
-            const index = parties.findIndex(party =>
-                party.name === selectedParty.name &&
-                party.phone === selectedParty.phone
-            );
-
-            if (index !== -1) {
-                editParty(index);
-            }
-
-        }
-
-    }
-
+    document.getElementById("search").addEventListener("keyup", searchParty);
 };
 
 // ===========================
 // Display Parties
 // ===========================
-
-function getPartyRemaining(party) {
-
-    const bills =
-        JSON.parse(localStorage.getItem("bills")) || [];
-
-    let remaining = 0;
-
-    bills.forEach(bill => {
-
-        if (
-            bill.party &&
-            bill.party.name === party.name &&
-            bill.party.phone === party.phone
-        ) {
-
-            if (bill.payment) {
-
-                remaining += Number(
-                    bill.payment.remainingAmount || 0
-                );
-
-            } else {
-
-                remaining += Number(
-                    bill.grandTotal || 0
-                );
-
-            }
-
-        }
-
-    });
-
-    return (Math.round(remaining * 100) / 100).toFixed(2);
-}
 
 function displayParties() {
 
@@ -153,27 +73,12 @@ function displayParties() {
 
             </div>
 
-            <div class="party-right" onclick="event.stopPropagation()">
+            <div class="menu" onclick="event.stopPropagation()">
 
-              ${Number(getPartyRemaining(party)) === 0
-                    ? `
-                        <div class="party-remaining no-due">
-                            No Due
-                        </div>
-                    `
-                    : `
-                        <div class="party-remaining">
-                            ₹${getPartyRemaining(party)}
-                        </div>
-                    `
-                }
-
-                <div class="menu">
-
-                    <button class="menu-btn"
-                    onclick="toggleMenu(this)">
-                        ⋮
-                    </button>
+                <button class="menu-btn"
+                onclick="toggleMenu(this)">
+                    ⋮
+                </button>
 
                 <div class="dropdown">
 

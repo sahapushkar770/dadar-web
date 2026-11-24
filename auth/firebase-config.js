@@ -5,7 +5,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 import {
-    getFirestore
+    initializeFirestore,
+    persistentLocalCache,
+    persistentMultipleTabManager
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -21,6 +23,12 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
-const db = getFirestore(app);
+// Local persistent cache: saves are kept safely even if the page changes
+// or the internet drops, and are sent to the server when possible.
+const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+    })
+});
 
 export { auth, db };

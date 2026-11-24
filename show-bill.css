@@ -287,6 +287,44 @@ header h1{
     border-bottom:none;
 }
 
+.modal-qty-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-qty-box button {
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-qty-box .m-minus { background: #dc3545; }
+.modal-qty-box .m-plus { background: #25D366; }
+
+.modal-qty-box span {
+    width: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.modal-summary{
+    border-top:2px dashed #ccc;
+    padding-top:12px;
+    margin-bottom:20px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
 
 /* ================= MODAL BUTTONS ================= */
 .popup-buttons{
@@ -501,386 +539,4 @@ header h1{
 
 .restore-btn:hover{
     background:#0b7c6f;
-}
-
-.bill-party-area{
-    margin: 2px 0 4px;
-    font-size: 13px;
-    color: #666;
-}
-
-.bill-party-area i{
-    margin-right: 4px;
-    font-size: 12px;
-}
-
-/* =========================
-   FLOATING FILTER BUTTON
-========================= */
-
-.filter-fab{
-    position:fixed;
-    right:25px;
-    bottom:100px;
-
-    width:55px;
-    height:55px;
-
-    border:none;
-    border-radius:50%;
-
-    background:#075E54;
-    color:white;
-
-    font-size:20px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    cursor:pointer;
-
-    box-shadow:0 6px 15px rgba(0,0,0,.3);
-
-    z-index:1000;
-
-    transition:.25s;
-}
-
-.filter-fab:hover{
-    background:#128C7E;
-    transform:scale(1.08);
-}
-
-
-/* =========================
-   FLOATING ADD BUTTON
-========================= */
-
-.fab{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-
-    width:65px;
-    height:65px;
-
-    border:none;
-    border-radius:50%;
-
-    background:#25D366;
-    color:white;
-
-    font-size:40px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    cursor:pointer;
-
-    box-shadow:0 6px 15px rgba(0,0,0,.3);
-
-    z-index:1000;
-
-    transition:.25s;
-}
-
-.fab:hover{
-    background:#128C7E;
-    transform:scale(1.08);
-}
-
-/* =========================
-   FILTER PANEL
-========================= */
-
-.filter-panel{
-    position:fixed;
-
-    right:25px;
-    bottom:170px;
-
-    width:300px;
-
-    background:white;
-
-    border-radius:15px;
-
-    padding:20px;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-
-    display:none;
-    flex-direction:column;
-
-    z-index:999;
-
-    animation:filterOpen .2s ease;
-}
-
-@keyframes filterOpen{
-
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
-}
-
-
-/* HEADER */
-
-.filter-header{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:15px;
-}
-
-.filter-header h3{
-
-    color:#075E54;
-    margin:0;
-
-}
-
-.filter-close{
-
-    border:none;
-    background:none;
-
-    font-size:22px;
-
-    color:#777;
-
-    cursor:pointer;
-}
-
-
-/* FILTER GROUP */
-
-.filter-group{
-
-    margin-bottom:15px;
-
-}
-
-.filter-group label{
-
-    display:block;
-
-    font-weight:bold;
-
-    margin-bottom:6px;
-
-    color:#333;
-
-}
-
-.filter-group select{
-
-    width:100%;
-
-    padding:10px;
-
-    border:1px solid #ddd;
-
-    border-radius:8px;
-
-    outline:none;
-
-    font-size:14px;
-
-}
-
-.filter-group select:focus{
-
-    border-color:#075E54;
-
-}
-
-
-/* BUTTONS */
-
-.filter-actions{
-
-    display:flex;
-
-    gap:10px;
-
-    margin-top:5px;
-
-}
-
-.clear-filter-btn,
-.apply-filter-btn{
-
-    flex:1;
-
-    padding:10px;
-
-    border:none;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    font-weight:bold;
-
-}
-
-.clear-filter-btn{
-
-    background:#eee;
-    color:#555;
-
-}
-
-.apply-filter-btn{
-
-    background:#075E54;
-    color:white;
-
-}
-
-/* =========================
-   FILTER SELECTED BOX
-========================= */
-
-.filter-group select,
-.filter-group input[type="date"] {
-    width: 100%;
-    padding: 11px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #fff;
-    color: #333;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s;
-}
-
-/* When selected / focused */
-.filter-group select:focus,
-.filter-group input[type="date"]:focus {
-    border-color: #075E54;
-    box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.15);
-}
-
-/* Date box */
-#specificDate {
-    cursor: pointer;
-}
-
-/* =========================
-   KEYBOARD QUANTITY INPUT
-========================= */
-
-/* =========================
-   QUANTITY BUTTONS
-========================= */
-
-.modal-qty-box{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-shrink:0;
-}
-
-.modal-qty-box button{
-    width:30px;
-    height:30px;
-
-    border:none;
-    border-radius:50%;
-
-    color:#fff;
-    font-size:18px;
-    font-weight:bold;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    cursor:pointer;
-
-    transition:0.2s;
-}
-
-/* MINUS BUTTON */
-.modal-qty-box .m-minus{
-    background:#dc3545;
-}
-
-/* PLUS BUTTON */
-.modal-qty-box .m-plus{
-    background:#25D366;
-}
-
-/* HOVER */
-.modal-qty-box .m-minus:hover{
-    background:#b02a37;
-    transform:scale(1.08);
-}
-
-.modal-qty-box .m-plus:hover{
-    background:#128C7E;
-    transform:scale(1.08);
-}
-
-/* CLICK */
-.modal-qty-box button:active{
-    transform:scale(0.92);
-}
-
-.modal-qty-input{
-    width:50px;
-    height:32px;
-    text-align:center;
-    border:1px solid #ccc;
-    border-radius:6px;
-    outline:none;
-    font-size:15px;
-    font-weight:bold;
-    background:#fff;
-}
-
-/* Remove browser number-input arrows */
-
-.modal-qty-input::-webkit-inner-spin-button,
-.modal-qty-input::-webkit-outer-spin-button{
-    -webkit-appearance:none;
-    margin:0;
-}
-
-.modal-qty-input:focus{
-    border-color:#075E54;
-    box-shadow:0 0 0 2px rgba(7,94,84,.15);
-}
-
-.modal-item-info{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    flex:1;
-    min-width:0;
-}
-
-.modal-item-info strong{
-    color:#222;
-    font-size:14px;
-    word-break:break-word;
-}
-
-.modal-item-info span{
-    color:#777;
-    font-size:13px;
 }
